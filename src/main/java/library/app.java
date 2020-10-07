@@ -10,19 +10,18 @@ public class app {
         // pass args list to wrapper
         // if there is no args, call interactive shell
         if (!cmd.isEmpty()) wrapper_cmd(cmd);
-        else interactive_shell();
+        else interactive();
     }
 
-    static void interactive_shell() {
+    static void interactive() {
         Scanner sc = new Scanner(System.in);
         print_prompt();
         while (true) {
-            if (sc.hasNextLine()) {
-                String cmdline = sc.nextLine();
-                List<String> cmd = parse_cmd(cmdline);
-                wrapper_cmd(cmd);
-                print_prompt();
-            }
+            if (!sc.hasNextLine()) continue;
+            String cmdline = sc.nextLine();
+            List<String> cmd = parse_cmd(cmdline);
+            wrapper_cmd(cmd);
+            print_prompt();
         }
     }
 
@@ -33,32 +32,18 @@ public class app {
     static List<String> parse_cmd(String cmdline) {
         List<String> cmd = new ArrayList<String>();
         StringBuffer buf = new StringBuffer();
-
         char[] chars = cmdline.toCharArray();
-        boolean quote = false;
+        char space = ' ', quote = '"';
+        char delimiter = space;
 
-        for (char ch : chars) {
-
-            if (ch=='"') {
+        for (char ch:chars) {
+            if (ch==delimiter) {
                 if (buf.length() > 0) cmd.add(buf.toString());
                 buf.delete(0, buf.length());
-                if (quote) quote = false; else quote = true;
-                continue;
+                delimiter = space;
             }
-            else if (quote) {
-                buf.append(ch);
-                continue;
-            }
-
-            switch(ch) {
-                case ' ':
-                    if (buf.length() > 0) cmd.add(buf.toString());
-                    buf.delete(0, buf.length());
-                    break;
-                default:
-                    buf.append(ch);
-            }
-
+            else if (ch==quote) delimiter = quote;
+            else buf.append(ch);
         }
 
         if (buf.length() > 0) cmd.add(buf.toString());
@@ -71,9 +56,9 @@ public class app {
         switch (cmd.get(0)) {
             case "exit":
                 System.exit(0);
+                break;
             default:
                 System.out.printf("[*] COMMAND: %s\n", cmd);
-                break;
         }
     }
 }
