@@ -2,13 +2,13 @@ package library;
 
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class interactive {
     public void start() {
         while (true) {
             String cmdline = prompt();
-            List<String> cmd = parse(cmdline);
+            String[] cmd = parse(cmdline);
             wrapper(cmd);
         }
     }
@@ -19,7 +19,7 @@ public class interactive {
         return cmdline;
     }
 
-    public List<String> parse(String cmdline) {
+    public String[] parse(String cmdline) {
         parse_buffer buffer = new parse_buffer();
         parse_delimiter delimiter = new parse_delimiter();
         char[] chars = cmdline.toCharArray();
@@ -36,18 +36,18 @@ public class interactive {
         }
 
         buffer.reset();
-        return buffer.cmd;
+        return buffer.get();
     }
 
-    public void wrapper(List<String> cmd) {
-        if (cmd.isEmpty()) return;
-        switch (cmd.get(0)) {
+    public void wrapper(String[] cmd) {
+        if (cmd.length==0) return;
+        switch (cmd[0]) {
             case "exit":
                 sc.sc.close();
                 System.exit(0);
                 break;
             default:
-                System.out.printf("[*] COMMAND: %s\n", cmd);
+                System.out.printf("[*] COMMAND: %s\n", Arrays.toString(cmd));
         }
     }
 }
@@ -63,6 +63,10 @@ class parse_buffer {
     void reset() {
         if (buf.length() > 0) cmd.add(buf.toString());
         buf.delete(0, buf.length());
+    }
+
+    String[] get() {
+        return cmd.stream().toArray(String[]::new);
     }
 }
 

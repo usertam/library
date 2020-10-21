@@ -1,7 +1,5 @@
 package library;
 
-import java.util.*;
-
 public class app {
     public static void main(String[] args) {
         // create interactive object
@@ -10,7 +8,7 @@ public class app {
         // pass args as list to wrapper
         // if there is no args, call interactive shell
         if (args.length!=0)
-            interactive.wrapper(Arrays.asList(args));
+            interactive.wrapper(args);
         else
             interactive.start();
     }
