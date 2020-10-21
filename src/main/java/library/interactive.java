@@ -29,8 +29,10 @@ public class interactive {
                 buffer.reset();
                 delimiter.reset();
             }
-            else if (ch==delimiter.quote)
+            else if (ch==delimiter.quote) {
+                buffer.reset();
                 delimiter.quote();
+            }
             else
                 buffer.append(ch);
         }
