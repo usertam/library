@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class interactive {
-    public void start() {
+    public static void start() {
         while (true) {
             String cmdline = prompt();
             String[] cmd = parse(cmdline);
@@ -13,13 +13,13 @@ public class interactive {
         }
     }
 
-    public String prompt() {
+    public static String prompt() {
         System.out.print("> ");
         String cmdline = sc.sc.nextLine();
         return cmdline;
     }
 
-    public String[] parse(String cmdline) {
+    public static String[] parse(String cmdline) {
         parse_buffer buffer = new parse_buffer();
         parse_delimiter delimiter = new parse_delimiter();
         char[] chars = cmdline.toCharArray();
@@ -41,7 +41,7 @@ public class interactive {
         return buffer.get();
     }
 
-    public void wrapper(String[] cmd) {
+    public static void wrapper(String[] cmd) {
         if (cmd.length==0) return;
         switch (cmd[0]) {
             case "exit":
