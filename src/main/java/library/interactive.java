@@ -7,15 +7,16 @@ import java.util.List;
 public class interactive {
     public void start() {
         while (true) {
-            print_prompt();
-            String cmdline = sc.sc.nextLine();
+            String cmdline = prompt();
             List<String> cmd = parse(cmdline);
             wrapper(cmd);
         }
     }
 
-    public void print_prompt() {
+    public String prompt() {
         System.out.print("> ");
+        String cmdline = sc.sc.nextLine();
+        return cmdline;
     }
 
     public List<String> parse(String cmdline) {
