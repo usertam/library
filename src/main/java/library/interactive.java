@@ -4,14 +4,11 @@ import java.util.*;
 
 public class interactive {
     public void start() {
-        Scanner sc = new Scanner(System.in);
-        print_prompt();
         while (true) {
-            if (!sc.hasNextLine()) continue;
-            String cmdline = sc.nextLine();
+            print_prompt();
+            String cmdline = sc.sc.nextLine();
             List<String> cmd = parse(cmdline);
             wrapper(cmd);
-            print_prompt();
         }
     }
 
@@ -43,6 +40,7 @@ public class interactive {
         if (cmd.isEmpty()) return;
         switch (cmd.get(0)) {
             case "exit":
+                sc.sc.close();
                 System.exit(0);
                 break;
             default:
@@ -76,4 +74,8 @@ class parse_delimiter {
     void reset() {
         current = space;
     }
+}
+
+class sc {
+    static Scanner sc = new Scanner(System.in);
 }
