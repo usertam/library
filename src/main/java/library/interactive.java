@@ -25,11 +25,11 @@ public class interactive {
         char[] chars = cmdline.toCharArray();
 
         for (char ch:chars) {
-            if (ch==delimiter.current) {
+            if (ch == delimiter.current) {
                 buffer.reset();
                 delimiter.reset();
             }
-            else if (ch==delimiter.quote) {
+            else if (ch == delimiter.quote) {
                 buffer.reset();
                 delimiter.quote();
             }
@@ -42,7 +42,8 @@ public class interactive {
     }
 
     public static void wrapper(String[] cmd) {
-        if (cmd.length==0) return;
+        if (cmd.length == 0)
+            return;
         switch (cmd[0]) {
             case "exit":
                 sc.sc.close();
@@ -63,7 +64,8 @@ class parse_buffer {
     }
 
     void reset() {
-        if (buf.length() > 0) cmd.add(buf.toString());
+        if (buf.length() > 0)
+            cmd.add(buf.toString());
         buf.delete(0, buf.length());
     }
 
