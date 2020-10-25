@@ -9,18 +9,12 @@
 plugins {
     id 'java'
     id 'application'
-    id 'java-library'
 }
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-}
-
-dependencies {
-    implementation 'com.google.guava:guava:29.0-jre'
-    testImplementation 'junit:junit:4.13'
 }
 
 application {
@@ -30,7 +24,7 @@ application {
 
 jar {
     manifest {
-        attributes(
+        attributes (
             'Main-Class': 'library.app'
         )
     }
