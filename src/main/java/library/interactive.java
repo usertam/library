@@ -6,10 +6,18 @@ import java.util.Arrays;
 
 public class interactive {
     public static void start() {
-        while (true) {
-            String cmdline = prompt();
-            String[] cmd = parse(cmdline);
-            wrapper(cmd);
+        try {
+            while (true) {
+                String cmdline = prompt();
+                String[] cmd = parse(cmdline);
+                wrapper(cmd);
+            } 
+        }
+        catch (java.util.NoSuchElementException e) {
+            System.out.printf("\n");
+            System.out.printf("[-] The stardard input stream is empty.\n");
+            System.out.printf("[*] Proceeds to exit.\n");
+            System.exit(0);
         }
     }
 
