@@ -48,12 +48,16 @@ public class interactive {
             return;
         switch (cmd[0]) {
             case "exit":
-                sc.sc.close();
-                System.exit(0);
+                exit(0);
                 break;
             default:
                 System.out.printf("[*] COMMAND: %s\n", Arrays.toString(cmd));
         }
+    }
+
+    public static void exit(int code) {
+        sc.kill();
+        System.exit(code);
     }
 }
 
@@ -99,5 +103,10 @@ class sc {
         System.out.printf(s);
         String input = sc.nextLine();
         return input;
+    }
+
+    // method to close the scanner
+    static void kill(){
+        sc.close();
     }
 }
