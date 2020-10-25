@@ -51,7 +51,7 @@ public class interactive {
                 exit(0);
                 break;
             default:
-                System.out.printf("[*] COMMAND: %s\n", Arrays.toString(cmd));
+                System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
         }
     }
 
