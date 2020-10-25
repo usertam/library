@@ -56,7 +56,7 @@ public class interactive {
 }
 
 class parse_buffer {
-    ArrayList<String> cmd = new ArrayList<String>();
+    ArrayList<String> cmd = new ArrayList<>();
     StringBuffer buf = new StringBuffer();
     
     void append(char ch) {
