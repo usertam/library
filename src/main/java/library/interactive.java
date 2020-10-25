@@ -8,7 +8,7 @@ public class interactive {
     public static void start() {
         try {
             while (true) {
-                String cmdline = prompt();
+                String cmdline = sc.prompt("> ");
                 String[] cmd = parse(cmdline);
                 wrapper(cmd);
             } 
@@ -19,12 +19,6 @@ public class interactive {
             System.out.printf("[*] Proceeds to exit.\n");
             System.exit(0);
         }
-    }
-
-    public static String prompt() {
-        System.out.print("> ");
-        String cmdline = sc.sc.nextLine();
-        return cmdline;
     }
 
     public static String[] parse(String cmdline) {
@@ -96,5 +90,14 @@ class parse_delimiter {
 }
 
 class sc {
+
+    // declare scanner
     static Scanner sc = new Scanner(System.in);
+
+    // method to prompt user for input
+    static String prompt(String s){
+        System.out.printf(s);
+        String input = sc.nextLine();
+        return input;
+    }
 }
