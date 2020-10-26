@@ -22,25 +22,29 @@ public class interactive {
     }
 
     public static String[] parse(String cmdline) {
-        parse_buffer buffer = new parse_buffer();
-        parse_delimiter delimiter = new parse_delimiter();
+
+        // create objects from classes
+        interactive i = new interactive();
+        interactive.buf buf = i.new buf();
+        interactive.del del = i.new del();
+
         char[] chars = cmdline.toCharArray();
 
-        for (char ch:chars) {
-            if (ch == delimiter.current) {
-                buffer.reset();
-                delimiter.reset();
+        for (char c : chars) {
+            if (c == del.current) {
+                buf.reset();
+                del.reset();
             }
-            else if (ch == delimiter.quote) {
-                buffer.reset();
-                delimiter.quote();
+            else if (c == del.quote) {
+                buf.reset();
+                del.quote();
             }
             else
-                buffer.append(ch);
+                buf.append(c);
         }
 
-        buffer.reset();
-        return buffer.get();
+        buf.reset();
+        return buf.get();
     }
 
     public static void wrapper(String[] cmd) {
@@ -54,37 +58,33 @@ public class interactive {
                 System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
         }
     }
-}
 
-class parse_buffer {
-    ArrayList<String> cmd = new ArrayList<>();
-    StringBuffer buf = new StringBuffer();
+    // parse() buffer class 
+    private class buf {
+        ArrayList<String> cmd = new ArrayList<>();
+        StringBuffer buf = new StringBuffer();
+        
+        void append(char c) {
+            buf.append(c);
+        }
     
-    void append(char ch) {
-        buf.append(ch);
+        void reset() {
+            if (buf.length() > 0)
+                cmd.add(buf.toString());
+            buf.delete(0, buf.length());
+        }
+    
+        String[] get() {
+            return cmd.stream().toArray(String[]::new);
+        }
     }
-
-    void reset() {
-        if (buf.length() > 0)
-            cmd.add(buf.toString());
-        buf.delete(0, buf.length());
-    }
-
-    String[] get() {
-        return cmd.stream().toArray(String[]::new);
-    }
-}
-
-class parse_delimiter {
-    char space = ' ', quote = '"';
-    char current = space;
-
-    void quote() {
-        current = quote;
-    }
-
-    void reset() {
-        current = space;
+    
+    // parse() delimiter class
+    private class del {
+        char space = ' ', quote = '"';
+        char current = space;
+        void quote() { current = quote; }
+        void reset() { current = space; }
     }
 }
 
