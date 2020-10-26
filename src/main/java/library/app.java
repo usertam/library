@@ -9,4 +9,9 @@ public class app {
         else
             interactive.start();
     }
+
+    public static void exit(int code) {
+        sc.kill();
+        System.exit(code);
+    }
 }

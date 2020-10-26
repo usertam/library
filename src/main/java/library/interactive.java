@@ -48,16 +48,11 @@ public class interactive {
             return;
         switch (cmd[0]) {
             case "exit":
-                exit(0);
+                app.exit(0);
                 break;
             default:
                 System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
         }
-    }
-
-    public static void exit(int code) {
-        sc.kill();
-        System.exit(code);
     }
 }
 
