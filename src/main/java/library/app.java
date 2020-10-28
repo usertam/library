@@ -2,16 +2,27 @@ package library;
 
 public class app {
     public static void main(String[] args) {
-        // pass args as list to wrapper
-        // if there is no args, start interactive cycles
-        if (args.length != 0)
+
+        // process arguments, or start interactive cycles
+        if (args.length != 0) {
             interactive.wrapper(args);
-        else
+        } else {
             interactive.start();
+        }
     }
 
     public static void exit(int code) {
+
+        // stop running resources
         sc.kill();
+
+        // terminate the program
         System.exit(code);
+    }
+
+    public static void exit(){
+
+        // exit() without arguments means exit(0)
+        exit(0);
     }
 }
