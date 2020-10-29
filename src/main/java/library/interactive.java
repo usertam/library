@@ -72,18 +72,18 @@ public class interactive {
         // define array list and string buffer
         ArrayList<String> cmd = new ArrayList<>();
         StringBuffer buf = new StringBuffer();
-        
+
         // method to append char to buffer
         void append(char c) {
             buf.append(c);
         }
-        
+
         // method to append the string to arraylist, then clear the buffer
         void reset() {
             if (buf.length() > 0) cmd.add(buf.toString());
             buf.delete(0, buf.length());
         }
-    
+
         // method to return a string array
         String[] get() {
             reset();
