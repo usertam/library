@@ -11,10 +11,10 @@ public class interactive {
         // interactive cycles
         try {
             while (true) {
-                String cmdline = sc.prompt("> ");
-                String[] cmd = parse(cmdline);
-                wrapper(cmd);
-            } 
+                String line = sc.prompt("> ");
+                String[] cmd = parser.spilt(line);
+                eval(cmd);
+            }
         }
         catch (java.util.NoSuchElementException e) {
             System.out.printf("\n");
@@ -24,12 +24,30 @@ public class interactive {
         }
     }
 
-    public static String[] parse(String line) {
+    public static void eval(String[] cmd) {
+
+        // return if cmd is empty
+        if (cmd.length == 0) return;
+
+        // call requested methods here
+        switch (cmd[0]) {
+            case "exit":
+                app.exit(0);
+                break;
+            default:
+                System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
+        }
+    }
+}
+
+class parser {
+
+    static String[] spilt(String line) {
 
         // create objects from classes
-        interactive i = new interactive();
-        interactive.buf buf = i.new buf();
-        interactive.del del = i.new del();
+        parser p = new parser();
+        parser.buf buf = p.new buf();
+        parser.del del = p.new del();
 
         // command parsing logic
         char a[] = line.toCharArray();
@@ -51,22 +69,6 @@ public class interactive {
         return buf.get();
     }
 
-    public static void wrapper(String[] cmd) {
-
-        // return if cmd is empty
-        if (cmd.length == 0) return;
-
-        // call requested methods here
-        switch (cmd[0]) {
-            case "exit":
-                app.exit(0);
-                break;
-            default:
-                System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
-        }
-    }
-
-    // parse() buffer class 
     private class buf {
 
         // define array list and string buffer
@@ -90,8 +92,7 @@ public class interactive {
             return cmd.stream().toArray(String[]::new);
         }
     }
-    
-    // parse() delimiter class
+
     private class del {
 
         // define delimiter characters

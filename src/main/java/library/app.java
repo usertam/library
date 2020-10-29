@@ -5,7 +5,7 @@ public class app {
 
         // process arguments, or start interactive cycles
         if (args.length != 0) {
-            interactive.wrapper(args);
+            interactive.eval(args);
         } else {
             interactive.start();
         }
@@ -18,11 +18,5 @@ public class app {
 
         // terminate the program
         System.exit(code);
-    }
-
-    public static void exit(){
-
-        // exit() without arguments means exit(0)
-        exit(0);
     }
 }
