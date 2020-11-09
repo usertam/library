@@ -111,14 +111,14 @@ class sc {
     static Scanner sc = new Scanner(System.in);
 
     // method to prompt for input
-    static String prompt(String s){
+    static String prompt(String s) {
         System.out.printf(s);
         String input = sc.nextLine();
         return input;
     }
 
     // method to close the scanner
-    static void kill(){
+    static void kill() {
         sc.close();
     }
 }
