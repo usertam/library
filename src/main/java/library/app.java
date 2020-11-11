@@ -7,6 +7,7 @@ public class app {
         // process arguments, or start interactive cycles
         if (args.length != 0) {
             interactive.eval(args);
+            app.exit(0);
         } else {
             interactive.start();
         }
