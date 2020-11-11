@@ -18,8 +18,7 @@ public class interactive {
         }
         catch (java.util.NoSuchElementException e) {
             System.out.printf("\n");
-            System.out.printf("[-] The stardard input stream is empty.\n");
-            System.out.printf("[-] Exiting.\n");
+            System.out.printf("[-] Error processing input, exiting.\n");
             app.exit(1);
         }
     }
