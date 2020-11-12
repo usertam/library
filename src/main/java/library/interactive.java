@@ -9,17 +9,10 @@ public class interactive {
     public static void start() {
 
         // interactive cycles
-        try {
-            while (true) {
-                String line = sc.prompt("> ");
-                String[] cmd = parser.spilt(line);
-                eval(cmd);
-            }
-        }
-        catch (java.util.NoSuchElementException e) {
-            System.out.printf("\n");
-            System.out.printf("[-] Error processing input, exiting.\n");
-            app.exit(1);
+        while (true) {
+            String line = sc.prompt("> ");
+            String[] cmd = parser.spilt(line);
+            eval(cmd);
         }
     }
 
@@ -111,9 +104,17 @@ class sc {
 
     // method to prompt for input
     static String prompt(String s) {
-        System.out.printf(s);
-        String input = sc.nextLine();
-        return input;
+        try {
+            System.out.printf(s);
+            String input = sc.nextLine();
+            return input;
+        }
+        catch (java.util.NoSuchElementException e) {
+            System.out.printf("\n");
+            System.out.printf("[*] EOF detected, exiting.\n");
+            app.exit(0);
+            return null;
+        }
     }
 
     // method to close the scanner
