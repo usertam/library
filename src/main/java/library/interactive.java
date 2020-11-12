@@ -23,6 +23,10 @@ public class interactive {
 
         // call requested methods here
         switch (cmd[0]) {
+            // test method, may be changed later
+            case "ls":
+                query.print_books_basic();
+                break;
             case "exit":
                 app.exit(0);
                 break;
