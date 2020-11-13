@@ -141,6 +141,24 @@ public class database {
         }
     }
 
+    public static void write_passwd(int uid, String[] p) {
+
+        // sql query command (prepare statement)
+        String cmd = "UPDATE users SET passwd_hash = ?, passwd_salt = ? WHERE uid = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, p[0]);
+            pstmt.setString(2, p[1]);
+            pstmt.setInt(3, uid);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            // unable to update, print error message
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static int query_uid(String user) {
 
         /** This method will return an user id. */
