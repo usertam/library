@@ -32,7 +32,7 @@ import java.util.List;
 public class database {
 
     public static List<String[]> query_books() {
-        
+
         /** 
          * This method will return a list of arrays, which contain book details. 
          * 
@@ -113,6 +113,35 @@ public class database {
         }
     }
 
+    public static String[] query_user(int uid) {
+
+        /** 
+         * This method will return a string array of user's user id, username and full name. 
+         * 
+         * user[]─┬─user[0] => uid
+         *        ├─user[1] => user
+         *        └─user[2] => name
+         */
+
+        // sql query command
+        String cmd = "SELECT uid, user, name FROM users WHERE uid = " + uid;
+
+        // query from database, return result
+        try (Statement stmt = sqlite.conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(cmd);
+            String user[] = {
+                rs.getString("uid"), 
+                rs.getString("user"),
+                rs.getString("name")
+            };
+            return user;
+        }
+        catch (SQLException e) {
+            String nobody[] = {"-1", "nobody", "Nobody"};
+            return nobody;
+        }
+    }
+
     public static String[] query_passwd(int uid) {
 
         /** 
@@ -141,22 +170,9 @@ public class database {
         }
     }
 
-    public static void write_passwd(int uid, String[] p) {
-
-        // sql query command (prepare statement)
-        String cmd = "UPDATE users SET passwd_hash = ?, passwd_salt = ? WHERE uid = ?";
-
-        // update database
-        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
-            pstmt.setString(1, p[0]);
-            pstmt.setString(2, p[1]);
-            pstmt.setInt(3, uid);
-            pstmt.executeUpdate();
-        }
-        catch (SQLException e) {
-            // unable to update, print error message
-            System.out.println(e.getMessage());
-        }
+    public static String query_user(int uid, int i) {
+        String user[] = query_user(uid);
+        return user[i];
     }
 
     public static int query_uid(String user) {
@@ -179,28 +195,22 @@ public class database {
         }
     }
 
-    public static String query_user(int uid) {
-
-        /** This method will return an user name. */
+    public static void write_passwd(int uid, String[] p) {
 
         // sql query command (prepare statement)
-        String cmd = "SELECT user FROM users WHERE uid = ?";
+        String cmd = "UPDATE users SET passwd_hash = ?, passwd_salt = ? WHERE uid = ?";
 
-        // query from database, return result
+        // update database
         try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
-            pstmt.setInt(1, uid);
-            ResultSet rs = pstmt.executeQuery();
-            String user = rs.getString("user");
-            return user;
+            pstmt.setString(1, p[0]);
+            pstmt.setString(2, p[1]);
+            pstmt.setInt(3, uid);
+            pstmt.executeUpdate();
         }
         catch (SQLException e) {
-            // unable to find user, return "nobody"
-            return "nobody";
+            // unable to update, print error message
+            System.out.println(e.getMessage());
         }
-    }
-
-    public static String query_user() {
-        return query_user(auth.uid);
     }
 
     public static void query_books_example() {

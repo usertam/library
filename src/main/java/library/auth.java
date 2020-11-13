@@ -11,7 +11,8 @@ public class auth {
     public static int uid = -1;
 
     public static void whoami() {
-        System.out.printf("%s (%d)\n", database.query_user(), auth.uid);
+        String user[] = database.query_user(auth.uid);
+        System.out.printf("[*] %s, user %s (%s)\n", user[2], user[1], user[0]);
     }
 
     public static void login() {
@@ -35,7 +36,7 @@ public class auth {
         // check the password
         if (p[0].equals(sha256Hex(pw + p[1]))) {
             setuid(uid);
-            System.out.printf("[+] Welcome back, user %s!\n", database.query_user(uid));
+            System.out.printf("[+] Welcome back, %s!\n", database.query_user(uid, 2));
         } else {
             System.out.printf("[-] Password does not match.\n");
         }
@@ -74,7 +75,8 @@ public class auth {
         if (uid == auth.uid) {
             System.out.printf("Enter new password: ");
         } else {
-            System.out.printf("Enter new password for %s: ", database.query_user(uid));
+            String user[] = database.query_user(uid);
+            System.out.printf("Enter new password for %s (%s): ", user[1], user[0]);
         }
 
         // get password and salt
