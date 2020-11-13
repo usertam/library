@@ -93,6 +93,38 @@ public class database {
         }
     }
 
+    public static int query_uid(String user) {
+        String cmd = "SELECT uid FROM users WHERE user = ?";
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, user);
+            ResultSet rs = pstmt.executeQuery();
+            int uid = rs.getInt("uid");
+            return uid;
+        }
+        catch (SQLException e) {
+            // System.out.println("[-] Unable to find user. ");
+            return -1;
+        }
+    }
+
+    public static String query_user(int uid) {
+        String cmd = "SELECT user FROM users WHERE uid = ?";
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, uid);
+            ResultSet rs = pstmt.executeQuery();
+            String user = rs.getString("user");
+            return user;
+        }
+        catch (SQLException e) {
+            // System.out.println("[-] Unable to find user. ");
+            return "nobody";
+        }
+    }
+
+    public static String query_user() {
+        return query_user(auth.uid);
+    }
+
     public static void query_books_example() {
 
         // print message

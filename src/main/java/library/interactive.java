@@ -23,7 +23,16 @@ public class interactive {
 
         // call requested methods here
         switch (cmd[0]) {
-            // test method, may be changed later
+            // test methods, may be changed later
+            case "whoami":
+                auth.whoami();
+                break;
+            case "login":
+                auth.login();
+                break;
+            case "logout":
+                auth.logout();
+                break;
             case "ls":
                 database.query_books_example();
                 break;
