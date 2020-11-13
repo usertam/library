@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 1. List<String[]> methods
- * 
  * The List<String[]> methods will return a Java list with multiple String arrays.
  * Each array consists of elements, which are pieces of information about a book or an user. 
  * 
@@ -20,9 +18,9 @@ import java.util.List;
  * List<String[]> list = query.list_books();
  * String b[] = list.get(0);
  * System.out.println(b[0]);            // b[0] is the ISBN of book
- * 
- * 2. String[] methods
- * 
+ */
+
+/**
  * The String[] methods will return a String array. 
  * The array consists pieces of information requested, as elements. 
  * 
