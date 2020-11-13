@@ -32,7 +32,27 @@ import java.util.List;
 public class database {
 
     public static List<String[]> query_books() {
+        
+        /** 
+         * This method will return a list of arrays, which contain book details. 
+         * 
+         * list<books[]>─┬─book1[]
+         *               ├─book2[]
+         *               └─...
+         * 
+         * book1[]─┬─book1[0] => ISBN
+         *         ├─book1[1] => title
+         *         ├─book1[2] => author
+         *         ├─book1[3] => publication date
+         *         ├─book1[4] => status
+         *         ├─book1[5] => user id of user borrowing the book
+         *         └─book1[6] => due date
+         */
+
+        // sql query command
         String cmd = "SELECT * FROM books";
+
+        // query from database, return result
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
             List<String[]> list = new ArrayList<>();
@@ -57,7 +77,23 @@ public class database {
     }
 
     public static List<String[]> query_users() {
+
+        /** 
+         * This method will return a list of arrays, which contain user details. 
+         * 
+         * list<users[]>─┬─user1[]
+         *               ├─user2[]
+         *               └─...
+         * 
+         * user1[]─┬─user1[0] => uid
+         *         ├─user1[1] => user
+         *         └─user1[2] => name
+         */
+
+        // sql query command
         String cmd = "SELECT uid, user, name FROM users";
+
+        // query from database, return result
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
             List<String[]> list = new ArrayList<>();
@@ -78,23 +114,41 @@ public class database {
     }
 
     public static String[] query_passwd(int uid) {
+
+        /** 
+         * This method will return a string array of user's password hash and salt. 
+         * 
+         * p[]─┬─p[0] => passwd_hash
+         *     └─p[1] => passwd_salt
+         */
+
+        // sql query command
         String cmd = "SELECT passwd_hash, passwd_salt FROM users WHERE uid = " + uid;
+
+        // query from database, return result
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
-            String passwd[] = {
+            String p[] = {
                 rs.getString("passwd_hash"), 
                 rs.getString("passwd_salt")
             };
-            return passwd;
+            return p;
         }
         catch (SQLException e) {
+            // this should never be reached, user checking should be performed beforehand
             System.out.println(e.getMessage());
             return null;
         }
     }
 
     public static int query_uid(String user) {
+
+        /** This method will return an user id. */
+
+        // sql query command (prepare statement)
         String cmd = "SELECT uid FROM users WHERE user = ?";
+
+        // query from database, return result
         try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
             pstmt.setString(1, user);
             ResultSet rs = pstmt.executeQuery();
@@ -102,13 +156,19 @@ public class database {
             return uid;
         }
         catch (SQLException e) {
-            // System.out.println("[-] Unable to find user. ");
+            // unable to find user, return user id of nobody
             return -1;
         }
     }
 
     public static String query_user(int uid) {
+
+        /** This method will return an user name. */
+
+        // sql query command (prepare statement)
         String cmd = "SELECT user FROM users WHERE uid = ?";
+
+        // query from database, return result
         try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
             pstmt.setInt(1, uid);
             ResultSet rs = pstmt.executeQuery();
@@ -116,7 +176,7 @@ public class database {
             return user;
         }
         catch (SQLException e) {
-            // System.out.println("[-] Unable to find user. ");
+            // unable to find user, return "nobody"
             return "nobody";
         }
     }
