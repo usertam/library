@@ -25,7 +25,7 @@ public class interactive {
         switch (cmd[0]) {
             // test method, may be changed later
             case "ls":
-                query.print_books_basic();
+                database.query_books_example();
                 break;
             case "exit":
                 app.exit(0);

@@ -29,9 +29,9 @@ import java.util.List;
  * System.out.println(p[0] + p[1]);     // p[0] is passwd_hash, p[1] is passwd_salt
  */
 
-public class query {
+public class database {
 
-    public static List<String[]> list_books() {
+    public static List<String[]> query_books() {
         String cmd = "SELECT * FROM books";
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
@@ -56,7 +56,7 @@ public class query {
         }
     }
 
-    public static List<String[]> list_users() {
+    public static List<String[]> query_users() {
         String cmd = "SELECT uid, user, name FROM users";
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
@@ -77,7 +77,7 @@ public class query {
         }
     }
 
-    public static String[] get_passwd(int uid) {
+    public static String[] query_passwd(int uid) {
         String cmd = "SELECT passwd_hash, passwd_salt FROM users WHERE uid = " + uid;
         try (Statement stmt = sqlite.conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(cmd);
@@ -93,13 +93,13 @@ public class query {
         }
     }
 
-    public static void print_books_basic() {
+    public static void query_books_example() {
 
         // print message
         System.out.println("[*] Listing all library collections.");
 
         // get list of book details (in separate array)
-        List<String[]> list = query.list_books();
+        List<String[]> list = database.query_books();
 
         // print formatted output
         System.out.println("=".repeat(64));
