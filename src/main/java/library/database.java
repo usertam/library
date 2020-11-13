@@ -142,6 +142,31 @@ public class database {
         }
     }
 
+    public static String query_user(int uid, int i) {
+        String user[] = query_user(uid);
+        return user[i];
+    }
+
+    public static int query_uid(String user) {
+
+        /** This method will return an user id. */
+
+        // sql query command (prepare statement)
+        String cmd = "SELECT uid FROM users WHERE user = ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, user);
+            ResultSet rs = pstmt.executeQuery();
+            int uid = rs.getInt("uid");
+            return uid;
+        }
+        catch (SQLException e) {
+            // unable to find user, return user id of nobody
+            return -1;
+        }
+    }
+
     public static String[] query_passwd(int uid) {
 
         /** 
@@ -167,31 +192,6 @@ public class database {
             // this should never be reached, user checking should be performed beforehand
             System.out.println(e.getMessage());
             return null;
-        }
-    }
-
-    public static String query_user(int uid, int i) {
-        String user[] = query_user(uid);
-        return user[i];
-    }
-
-    public static int query_uid(String user) {
-
-        /** This method will return an user id. */
-
-        // sql query command (prepare statement)
-        String cmd = "SELECT uid FROM users WHERE user = ?";
-
-        // query from database, return result
-        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
-            pstmt.setString(1, user);
-            ResultSet rs = pstmt.executeQuery();
-            int uid = rs.getInt("uid");
-            return uid;
-        }
-        catch (SQLException e) {
-            // unable to find user, return user id of nobody
-            return -1;
         }
     }
 
