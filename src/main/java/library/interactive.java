@@ -137,6 +137,26 @@ class sc {
         }
     }
 
+    // method to prompt for password (hide input)
+    static String prompt_pw(String s) {
+        if (System.console() != null) {
+            System.out.printf(s);
+            try {
+                String pw = new String(System.console().readPassword());
+                return pw;
+            } catch (java.lang.NullPointerException e) {
+                return null;
+            }
+        } else {
+            System.out.printf("[-] Unable to access the console.\n");
+            System.out.printf(" │  This might be caused by running the program from an IDE.\n");
+            System.out.printf(" └  Try to run me in an interactive command line.\n");
+            System.out.printf("[*] Fall back to default prompting method.\n");
+            System.out.printf(" └  The password will be displayed in plain text.\n");
+            return prompt(s);
+        }
+    }
+
     // method to close the scanner
     static void kill() {
         sc.close();

@@ -19,10 +19,7 @@ public class auth {
 
         // prompt for username
         String user = sc.prompt("Enter username: ");
-
-        // prompt for password, do not echo password back to console
-        System.out.printf("Enter password: ");
-        String pw = new String(System.console().readPassword());
+        String pw = sc.prompt_pw("Enter password: ");
 
         // get uid from database
         int uid = database.query_uid(user);
@@ -71,19 +68,24 @@ public class auth {
             return;
         }
 
-        // print message
+        // format prompt message
+        String s;
         if (uid == auth.uid) {
-            System.out.printf("Enter new password: ");
+            s = "Enter new password: ";
         } else {
             String user[] = database.query_user(uid);
-            System.out.printf("Enter new password for %s (%s): ", user[1], user[0]);
+            s = String.format("Enter new password for %s (%s): ", user[1], user[0]);
         }
 
-        // get password and salt
-        String pw = new String(System.console().readPassword());
-        String salt = get_salt();
+        // prompt for password
+        String pw = sc.prompt_pw(s);
+        if (pw == null) {
+            System.out.printf("[*] Aborted.\n");
+            return;
+        }
 
-        // write password
+        // generate salt and write password in hashed form
+        String salt = get_salt();
         String p[] = { sha256Hex(pw + salt), salt };
         database.write_passwd(uid, p);
     }
