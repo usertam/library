@@ -23,6 +23,26 @@ public class interactive {
 
         // call requested methods here
         switch (cmd[0]) {
+            // test methods, may be changed later
+            case "whoami":
+                auth.whoami();
+                break;
+            case "login":
+                auth.login();
+                break;
+            case "logout":
+                auth.logout();
+                break;
+            case "passwd":
+                if (cmd.length > 1) {
+                    auth.passwd(cmd[1]);
+                } else {
+                    auth.passwd(auth.uid);
+                }
+                break;
+            case "ls":
+                database.query_books_example();
+                break;
             case "exit":
                 app.exit(0);
                 break;
@@ -114,6 +134,26 @@ class sc {
             System.out.printf("[*] EOF detected, exiting.\n");
             app.exit(0);
             return null;
+        }
+    }
+
+    // method to prompt for password (hide input)
+    static String prompt_pw(String s) {
+        if (System.console() != null) {
+            System.out.printf(s);
+            try {
+                String pw = new String(System.console().readPassword());
+                return pw;
+            } catch (java.lang.NullPointerException e) {
+                return null;
+            }
+        } else {
+            System.out.printf("[-] Unable to access the console.\n");
+            System.out.printf(" │  This might be caused by running the program from an IDE.\n");
+            System.out.printf(" └  Try to run me in an interactive command line.\n");
+            System.out.printf("[*] Fall back to default prompting method.\n");
+            System.out.printf(" └  The password will be displayed in plain text.\n");
+            return prompt(s);
         }
     }
 
