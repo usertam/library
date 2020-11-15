@@ -1,0 +1,57 @@
+package library;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class helpcommand {
+public static void main(String[] args){
+        
+    System.out.println(    "\t|            Library Help Menu Selection             |\n");
+        int cmnd;
+        do{
+        System.out.println("\t|  Please Select an Operation by Entering a Command  |");
+        System.out.println("\t ====================================================");
+        System.out.println("\t|   [0]   List of Books                              |");
+        System.out.println("\t|   [1]   Search for a Book                          |");
+        System.out.println("\t|   [2]   Reserve a Book                             |");
+        System.out.println("\t|   [3]   Log in                                     |");
+        System.out.println("\t|   [4]   Create a New Account                       |");
+        System.out.println("\t|   [5]   Leave the Menu                             |");
+        System.out.println("\t ====================================================");
+        
+        System.out.println("What would you like to do?");
+        Scanner input = new Scanner(System.in);
+        cmnd = input.nextInt();
+        
+        switch (cmnd){
+            case '0': 
+                List<String[]> list = query.list_books();
+                for (String[] b : list) {
+                System.out.println(b);}     
+                break;
+            case '1': 
+                // search(); 
+                break;
+            case '2':
+               //reserve(); 
+                break;
+            case '3': 
+                List<String[]> list = query.user();
+                for (String[] cmd : list) {
+                System.out.println(cmd);} 
+                break;
+            case '4':
+                break;
+                //create();
+            case '5':
+                exit();break;  
+            default: 
+        }
+     } while (cmnd !='5');
+  }
+     
+public static void exit() {
+        System.out.println("End of Help Menu. See you again !\n");
+        System.exit(0);
+  }
+}
