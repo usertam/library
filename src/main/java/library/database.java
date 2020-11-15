@@ -213,6 +213,25 @@ public class database {
         }
     }
 
+    public static void write_status(int isbn, Object[] status) {
+
+        // sql query command (prepare statement)
+        String cmd = "UPDATE books SET status = ?, brow_uid = ?, brow_due = ? WHERE isbn = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, (int) status[0]);
+            pstmt.setInt(2, (int) status[1]);
+            pstmt.setString(2, (String) status[2]);
+            pstmt.setInt(3, isbn);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            // unable to update, print error message
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static void query_books_example() {
 
         // print message
