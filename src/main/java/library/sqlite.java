@@ -1,5 +1,6 @@
 package library;
 
+import java.io.File;
 import java.sql.*;
 
 public class sqlite {
@@ -7,6 +8,14 @@ public class sqlite {
     public static Connection conn;
 
     public static void connect() {
+
+        // check if the database file exists
+        File db = new File("library.db");
+        if (!db.exists()) {
+            System.out.printf("[-] Unable to find the database file.\n");
+            app.exit(1);
+        }
+
         try {
             String url = "jdbc:sqlite:library.db";
             conn = DriverManager.getConnection(url);
