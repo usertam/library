@@ -63,8 +63,8 @@ public class database {
                     rs.getString("author"),
                     rs.getString("pub"),
                     rs.getString("status"),
-                    rs.getString("borw_uid"),
-                    rs.getString("borw_due"),
+                    rs.getString("status_uid"),
+                    rs.getString("status_due"),
                 };
                 list.add(book);
             }
@@ -213,6 +213,44 @@ public class database {
         }
     }
 
+    public static int write_status(String isbn, Object[] status) {
+
+        /** 
+         * This method will take String (isbn), Object array (status[]) as argument. 
+         * 
+         * isbn => isbn of the selected book (as string)
+         * 
+         * status[]─┬─status[0] (int) => book status (0 = free, 1 = reserved, 2 = borrowed)
+         *          ├─status[1] (int) => the id of user who reserved/borrowed the book
+         *          └─status[2] (String) => due date of the borrowed book
+         */
+
+        /** 
+         * This method will return an integer. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query command (prepare statement)
+        String cmd = "UPDATE books SET status = ?, status_uid = ?, status_due = ? WHERE isbn = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, (int) status[0]);
+            pstmt.setInt(2, (int) status[1]);
+            pstmt.setString(3, (String) status[2]);
+            pstmt.setString(4, isbn);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
     public static void query_books_example() {
 
         // print message
@@ -229,5 +267,15 @@ public class database {
             System.out.printf("%s\t%s\n", b[0], b[1]);
         }
         System.out.println("=".repeat(64));
+    }
+
+    public static void reserve_example(String isbn) {
+        Object status[] = { 1, auth.uid, "" };
+        int i = database.write_status(isbn, status);
+        if (i > 0) {
+            System.out.printf("[+] Success\n");
+        } else {
+            System.out.printf("[-] Failed\n");
+        }
     }
 }

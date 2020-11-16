@@ -23,6 +23,11 @@ public class interactive {
 
         // call requested methods here
         switch (cmd[0]) {
+            // test methods may be changed later
+            case "reserve":
+                if (cmd.length > 1) database.reserve_example(cmd[1]);
+                else System.out.printf("[-] No ISBN supplied.\n");
+                break;
             case "whoami":
                 auth.whoami();
                 break;
