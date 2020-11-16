@@ -32,17 +32,15 @@ public class interactive {
                 auth.whoami();
                 break;
             case "login":
-                auth.login();
+                if (cmd.length > 1) auth.login(cmd[1]);
+                else auth.login();
                 break;
             case "logout":
                 auth.logout();
                 break;
             case "passwd":
-                if (cmd.length > 1) {
-                    auth.passwd(cmd[1]);
-                } else {
-                    auth.passwd(auth.uid);
-                }
+                if (cmd.length > 1) auth.passwd(cmd[1]);
+                else auth.passwd(auth.uid);
                 break;
             case "ls":
                 database.query_books_example();
@@ -54,70 +52,70 @@ public class interactive {
                 System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
         }
     }
-}
 
-class parser {
+    private static class parser {
 
-    static String[] spilt(String line) {
-
-        // create objects from classes
-        parser p = new parser();
-        parser.buf buf = p.new buf();
-        parser.del del = p.new del();
-
-        // command parsing logic
-        char a[] = line.toCharArray();
-        for (char c : a) {
-            if (c == del.current) {
-                buf.reset();
-                del.reset();
+        private static String[] spilt(String line) {
+    
+            // create objects from classes
+            parser p = new parser();
+            parser.buf buf = p.new buf();
+            parser.del del = p.new del();
+    
+            // command parsing logic
+            char a[] = line.toCharArray();
+            for (char c : a) {
+                if (c == del.current) {
+                    buf.reset();
+                    del.reset();
+                }
+                else if (c == del.quote) {
+                    buf.reset();
+                    del.quote();
+                }
+                else {
+                    buf.append(c);
+                }
             }
-            else if (c == del.quote) {
-                buf.reset();
-                del.quote();
-            }
-            else {
+    
+            // return a string array
+            return buf.get();
+        }
+    
+        private class buf {
+    
+            // define array list and string buffer
+            ArrayList<String> cmd = new ArrayList<>();
+            StringBuffer buf = new StringBuffer();
+    
+            // method to append char to buffer
+            void append(char c) {
                 buf.append(c);
             }
+    
+            // method to append the string to arraylist, then clear the buffer
+            void reset() {
+                if (buf.length() > 0) cmd.add(buf.toString());
+                buf.delete(0, buf.length());
+            }
+    
+            // method to return a string array
+            String[] get() {
+                reset();
+                return cmd.stream().toArray(String[]::new);
+            }
         }
-
-        // return a string array
-        return buf.get();
-    }
-
-    private class buf {
-
-        // define array list and string buffer
-        ArrayList<String> cmd = new ArrayList<>();
-        StringBuffer buf = new StringBuffer();
-
-        // method to append char to buffer
-        void append(char c) {
-            buf.append(c);
+    
+        private class del {
+    
+            // define delimiter characters
+            char space = ' ', quote = '"';
+            char current = space;
+    
+            // methods to change current delimiter
+            void quote() { current = quote; }
+            void reset() { current = space; }
         }
-
-        // method to append the string to arraylist, then clear the buffer
-        void reset() {
-            if (buf.length() > 0) cmd.add(buf.toString());
-            buf.delete(0, buf.length());
-        }
-
-        // method to return a string array
-        String[] get() {
-            reset();
-            return cmd.stream().toArray(String[]::new);
-        }
-    }
-
-    private class del {
-
-        // define delimiter characters
-        char space = ' ', quote = '"';
-        char current = space;
-
-        // methods to change current delimiter
-        void quote() { current = quote; }
-        void reset() { current = space; }
     }
 }
 
@@ -152,11 +150,12 @@ class sc {
                 return null;
             }
         } else {
-            System.out.printf("[-] Unable to access the console.\n");
-            System.out.printf(" │  This might be caused by running the program from an IDE.\n");
-            System.out.printf(" └  Try to run me in an interactive command line.\n");
+            System.out.printf("\n");
+            System.out.printf("[!] Unable to access the console.\n");
+            System.out.printf("  -  This might be caused by running the program from an IDE.\n");
+            System.out.printf("  -  Run me in an interactive command line to fix this.\n");
             System.out.printf("[*] Fall back to default prompting method.\n");
-            System.out.printf(" └  The password will be displayed in plain text.\n");
+            System.out.printf("[!] The password will be displayed in plain text.\n");
             return prompt(s);
         }
     }

@@ -15,17 +15,19 @@ public class auth {
         System.out.printf("[*] %s, user %s (%s)\n", user[2], user[1], user[0]);
     }
 
-    public static void login() {
+    public static void login(String user) {
 
-        // prompt for username
-        String user = sc.prompt("Enter username: ");
+        // prompt for password
         String pw = sc.prompt_pw("Enter password: ");
 
         // get uid from database
         int uid = database.query_uid(user);
 
         // check if the supplied user id exists
-        if (!check_priv(uid, 1)) return;
+        if (!check_priv(uid, 1)) {
+            System.out.printf("[-] Unknown user.\n");
+            return;
+        }
 
         // get hash and salt from database
         String p[] = database.query_passwd(uid);
@@ -37,6 +39,15 @@ public class auth {
         } else {
             System.out.printf("[-] Password does not match.\n");
         }
+    }
+
+    public static void login() {
+
+        // prompt for user
+        String user = sc.prompt("Enter username: ");
+
+        // continue login
+        login(user);
     }
 
     public static void logout() {
@@ -54,7 +65,7 @@ public class auth {
          * Security policies for passwd() method
          * 1. Deny guests
          * 2. Deny users modifying others password, except admin
-         * 3. Abort if invaild user id is supplied
+         * 3. Abort if unknown user id is supplied
          */
         
         if (!check_priv(auth.uid, 1)) {
@@ -64,7 +75,7 @@ public class auth {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         } else if (!check_uid(auth.uid)) {
-            System.out.printf("[-] Invaild user.\n");
+            System.out.printf("[-] Unknown user.\n");
             return;
         }
 

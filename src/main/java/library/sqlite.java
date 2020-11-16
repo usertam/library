@@ -10,7 +10,7 @@ public class sqlite {
         try {
             String url = "jdbc:sqlite:library.db";
             conn = DriverManager.getConnection(url);
-            System.out.printf("[*] SQLite: Connection established.\n");
+            // System.out.printf("[*] SQLite: Connection established.\n");
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -22,7 +22,7 @@ public class sqlite {
         try {
             if (conn != null) {
                 conn.close();
-                System.out.printf("[*] SQLite: Connection closed.\n");
+                // System.out.printf("[*] SQLite: Connection closed.\n");
             }
         }
         catch (SQLException e) {
