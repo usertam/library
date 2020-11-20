@@ -24,7 +24,7 @@ public class auth {
         int uid = database.query_uid(user);
 
         // check if the supplied user id exists
-        if (!check_priv(uid, 1)) {
+        if (!check_user(uid, 1)) {
             System.out.printf("[-] Unknown user.\n");
             return;
         }
@@ -35,7 +35,8 @@ public class auth {
         // check the password
         if (p[0].equals(sha256Hex(pw + p[1]))) {
             setuid(uid);
-            System.out.printf("[+] Welcome back, %s!\n", database.query_user(uid, 2));
+            String u[] = database.query_user(uid);
+            System.out.printf("[+] Welcome back, %s!\n", u[2]);
         } else {
             System.out.printf("[-] Password does not match.\n");
         }
@@ -63,18 +64,16 @@ public class auth {
 
         /**
          * Security policies for passwd() method
-         * 1. Deny guests
-         * 2. Deny users modifying others password, except admin
-         * 3. Abort if unknown user id is supplied
+         * 1. Deny guest access
+         * 2. Allow users to change own password only, except admin
          */
-        
-        if (!check_priv(auth.uid, 1)) {
+
+        if ( !check_user(auth.uid, 1) || ( !check_user(auth.uid, 0) && (uid != auth.uid) ) ) { 
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
-        } else if (!(uid == auth.uid) && !check_priv(auth.uid, 0)) { 
-            System.out.printf("[-] You don't have permission to perform this action.\n");
-            return;
-        } else if (!check_uid(auth.uid)) {
+        }
+
+        if ( !check_user(uid, 1) ) {
             System.out.printf("[-] Unknown user.\n");
             return;
         }
@@ -106,24 +105,26 @@ public class auth {
         passwd(uid);
     }
 
-    public static boolean check_priv(int uid, int mode) {
+    public static boolean check_user(int uid, int mode) {
 
-        // admin: bypass all security checks
-        if (uid == 0) {   
+        /**
+         * User checking method
+         * Admin only: mode = 0
+         * Users only: mode = 1
+         * 
+         * if (!check_user(auth.uid, mode)) {
+         *     System.out.printf("[-] You don't have permission to perform this action.\n");
+         *     return;
+         * }
+         */
+
+        if ((mode == 0) && (uid == 0)) {   
             return true;
-        }
-
-        // mode 1: allow all users, deny guests
-        if ((mode == 1) && (uid >= 0)) {
+        } else if ((mode == 1) && (uid >= 0)) {
             return true;
         }
 
         return false;
-    }
-
-    public static boolean check_uid(int uid) {
-        if (uid < 0) return false;
-        else return true;
     }
 
     private static String get_salt() {

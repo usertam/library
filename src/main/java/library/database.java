@@ -5,27 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The List<String[]> methods will return a Java list with multiple String arrays.
+ * The List<String[]> methods will return a list (dynamic array) with multiple string arrays.
  * Each array consists of elements, which are pieces of information about a book or an user. 
  * 
  * // For example, to print out the all book titles, do: 
- * List<String[]> list = query.list_books();
- * for (String[] b : list) {
- *     System.out.println(b[1]);        // b[1] is the title of current book
+ * List<String[]> list = query.query_books();
+ * for (String[] book : list) {
+ *     System.out.println(book[1]);     // b[1] is the title of current book
  * }
  * 
  * // Or to print out the ISBN of the first book in the list: 
- * List<String[]> list = query.list_books();
- * String b[] = list.get(0);
- * System.out.println(b[0]);            // b[0] is the ISBN of book
+ * String book[] = list.get(0);
+ * System.out.println(book[0]);         // b[0] is the ISBN of book
  */
 
 /**
- * The String[] methods will return a String array. 
+ * The String[] methods will return a string array. 
  * The array consists pieces of information requested, as elements. 
  * 
  * // You can do something like: 
- * String[] p = query.get_passwd(0);    // get passwd of admin (user id 0)
+ * String[] p = query.get_passwd(0);    // get passwd of admin (uid 0)
  * System.out.println(p[0] + p[1]);     // p[0] is passwd_hash, p[1] is passwd_salt
  */
 
@@ -34,22 +33,22 @@ public class database {
     public static List<String[]> query_books() {
 
         /** 
-         * This method will return a list of arrays, which contain book details. 
+         * Return a list of arrays, which contain book details. 
          * 
          * list<books[]>─┬─book1[]
          *               ├─book2[]
          *               └─...
          * 
-         * book1[]─┬─book1[0] => ISBN
-         *         ├─book1[1] => title
-         *         ├─book1[2] => author
-         *         ├─book1[3] => publication date
-         *         ├─book1[4] => status
-         *         ├─book1[5] => user id of user borrowing the book
-         *         └─book1[6] => due date
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
          */
 
-        // sql query command
+        // sql query statement
         String cmd = "SELECT * FROM books";
 
         // query from database, return result
@@ -79,18 +78,19 @@ public class database {
     public static List<String[]> query_users() {
 
         /** 
-         * This method will return a list of arrays, which contain user details. 
+         * Return a list of arrays, which contains user details. 
+         * However, password hash and salt should never be loaded in this method. 
          * 
          * list<users[]>─┬─user1[]
          *               ├─user2[]
          *               └─...
          * 
-         * user1[]─┬─user1[0] => uid
-         *         ├─user1[1] => user
-         *         └─user1[2] => name
+         * user[]─┬─user[0] => uid / user id
+         *        ├─user[1] => user
+         *        └─user[2] => name
          */
 
-        // sql query command
+        // sql query statement
         String cmd = "SELECT uid, user, name FROM users";
 
         // query from database, return result
@@ -113,22 +113,62 @@ public class database {
         }
     }
 
+    public static String[] query_book(String isbn) {
+
+        /** 
+         * Return an array, which contains book details. 
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT * FROM books WHERE isbn = ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, isbn);
+            ResultSet rs = pstmt.executeQuery();
+            String book[] = {
+                rs.getString("isbn"), 
+                rs.getString("title"),
+                rs.getString("author"),
+                rs.getString("pub"),
+                rs.getString("status"),
+                rs.getString("status_uid"),
+                rs.getString("status_due"),
+            };
+            return book;
+        }
+        catch (SQLException e) {
+            // unable to find book, return null
+            String book[] = null;
+            return book;
+        }
+    }
+
     public static String[] query_user(int uid) {
 
         /** 
-         * This method will return a string array of user's user id, username and full name. 
+         * Return an array, which contains details of an user. 
          * 
-         * user[]─┬─user[0] => uid
+         * user[]─┬─user[0] => uid / user id
          *        ├─user[1] => user
          *        └─user[2] => name
          */
 
-        // sql query command
-        String cmd = "SELECT uid, user, name FROM users WHERE uid = " + uid;
+        // sql query prepare statement
+        String cmd = "SELECT uid, user, name FROM users WHERE uid = ?";
 
         // query from database, return result
-        try (Statement stmt = sqlite.conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(cmd);
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, uid);
+            ResultSet rs = pstmt.executeQuery();
             String user[] = {
                 rs.getString("uid"), 
                 rs.getString("user"),
@@ -137,21 +177,44 @@ public class database {
             return user;
         }
         catch (SQLException e) {
+            // unable to find user, return user info of nobody
             String nobody[] = {"-1", "nobody", "Nobody"};
             return nobody;
         }
     }
 
-    public static String query_user(int uid, int i) {
-        String user[] = query_user(uid);
-        return user[i];
+    public static String[] query_passwd(int uid) {
+
+        /** 
+         * Return an array, which contains password details of an user. 
+         * 
+         * p[]─┬─p[0] => passwd_hash
+         *     └─p[1] => passwd_salt
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT passwd_hash, passwd_salt FROM users WHERE uid = ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, uid);
+            ResultSet rs = pstmt.executeQuery();
+            String p[] = {
+                rs.getString("passwd_hash"), 
+                rs.getString("passwd_salt")
+            };
+            return p;
+        }
+        catch (SQLException e) {
+            // this should never be reached, user checking should be performed beforehand
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     public static int query_uid(String user) {
 
-        /** This method will return an user id. */
-
-        // sql query command (prepare statement)
+        // sql query prepare statement
         String cmd = "SELECT uid FROM users WHERE user = ?";
 
         // query from database, return result
@@ -167,37 +230,9 @@ public class database {
         }
     }
 
-    public static String[] query_passwd(int uid) {
+    public static int write_passwd(int uid, String[] p) {
 
-        /** 
-         * This method will return a string array of user's password hash and salt. 
-         * 
-         * p[]─┬─p[0] => passwd_hash
-         *     └─p[1] => passwd_salt
-         */
-
-        // sql query command
-        String cmd = "SELECT passwd_hash, passwd_salt FROM users WHERE uid = " + uid;
-
-        // query from database, return result
-        try (Statement stmt = sqlite.conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(cmd);
-            String p[] = {
-                rs.getString("passwd_hash"), 
-                rs.getString("passwd_salt")
-            };
-            return p;
-        }
-        catch (SQLException e) {
-            // this should never be reached, user checking should be performed beforehand
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
-    public static void write_passwd(int uid, String[] p) {
-
-        // sql query command (prepare statement)
+        // sql query prepare statement
         String cmd = "UPDATE users SET passwd_hash = ?, passwd_salt = ? WHERE uid = ?";
 
         // update database
@@ -205,34 +240,35 @@ public class database {
             pstmt.setString(1, p[0]);
             pstmt.setString(2, p[1]);
             pstmt.setInt(3, uid);
-            pstmt.executeUpdate();
+            int i = pstmt.executeUpdate();
+            return i;
         }
         catch (SQLException e) {
-            // unable to update, print error message
+            // unable to update, print error message and return 0
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 
     public static int write_status(String isbn, Object[] status) {
 
         /** 
-         * This method will take String (isbn), Object array (status[]) as argument. 
+         * First, take string and an object array as argument. 
          * 
-         * isbn => isbn of the selected book (as string)
+         * isbn => isbn of the specified book
+         * The ISBN is treated as string, because it's pointless and too long to be an integer.
          * 
          * status[]─┬─status[0] (int) => book status (0 = free, 1 = reserved, 2 = borrowed)
-         *          ├─status[1] (int) => the id of user who reserved/borrowed the book
+         *          ├─status[1] (int) => the uid / user id who reserved/borrowed the book
          *          └─status[2] (String) => due date of the borrowed book
-         */
-
-        /** 
-         * This method will return an integer. 
+         * 
+         * Finally, return an integer as write status. 
          * 
          * 0 => nothing is updated, failed
          * 1 => one entry updated, success
          */
 
-        // sql query command (prepare statement)
+        // sql query prepare statement
         String cmd = "UPDATE books SET status = ?, status_uid = ?, status_due = ? WHERE isbn = ?";
 
         // update database
@@ -245,7 +281,7 @@ public class database {
             return i;
         }
         catch (SQLException e) {
-            // unable to update, print error message
+            // unable to update, print error message and return 0
             System.out.println(e.getMessage());
             return 0;
         }
@@ -263,9 +299,7 @@ public class database {
         System.out.println("=".repeat(64));
         System.out.println("ISBN\t\tTITLE");
         System.out.println("=".repeat(64));
-        for (String[] b : list) {
-            System.out.printf("%s\t%s\n", b[0], b[1]);
-        }
+        for (String[] b : list) System.out.printf("%s\t%s\n", b[0], b[1]);
         System.out.println("=".repeat(64));
     }
 
