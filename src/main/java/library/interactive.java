@@ -24,6 +24,10 @@ public class interactive {
         // call requested methods here
         switch (cmd[0]) {
             // test methods may be changed later
+            case "records":
+                if (cmd.length > 1) book.records(cmd[1]);
+                else book.records(auth.uid());
+                break;
             case "search":
                 if (cmd.length > 1) book.search(cmd[1]);
                 else System.out.printf("[-] No keyword supplied.\n");

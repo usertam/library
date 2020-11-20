@@ -122,6 +122,52 @@ public class database {
         }
     }
 
+    public static List<String[]> query_records(int uid) {
+
+        /** 
+         * Return a list of arrays, which contain book details. 
+         * 
+         * list<books[]>─┬─book1[]
+         *               ├─book2[]
+         *               └─...
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT * FROM books WHERE status_uid = ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, uid);
+            ResultSet rs = pstmt.executeQuery();
+            List<String[]> list = new ArrayList<>();
+            while (rs.next()) {
+                String book[] = {
+                    rs.getString("isbn"), 
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("pub"),
+                    rs.getString("status"),
+                    rs.getString("status_uid"),
+                    rs.getString("status_due"),
+                };
+                list.add(book);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     public static List<String[]> query_users() {
 
         /** 
