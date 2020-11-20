@@ -63,7 +63,7 @@ public class auth {
     public static void passwd(int uid) {
 
         /**
-         * Security policies for passwd() method
+         * Access control (check auth.uid)
          * 1. Deny guest access
          * 2. Allow users to change own password only, except admin
          */
@@ -73,22 +73,23 @@ public class auth {
             return;
         }
 
-        if ( !check_user(uid, 1) ) {
+        // check the supplied uid (check uid)
+        if (!check_user(uid, 1)) {
             System.out.printf("[-] Unknown user.\n");
             return;
         }
 
         // format prompt message
-        String s;
+        String prompt;
         if (uid == auth.uid) {
-            s = "Enter new password: ";
+            prompt = "Enter new password: ";
         } else {
-            String user[] = database.query_user(uid);
-            s = String.format("Enter new password for %s (%s): ", user[1], user[0]);
+            String u[] = database.query_user(uid);
+            prompt = String.format("Enter new password for %s (%s): ", u[1], u[0]);
         }
 
         // prompt for password
-        String pw = sc.prompt_pw(s);
+        String pw = sc.prompt_pw(prompt);
         if (pw == null) {
             System.out.printf("[*] Aborted.\n");
             return;
@@ -97,7 +98,14 @@ public class auth {
         // generate salt and write password in hashed form
         String salt = get_salt();
         String p[] = { sha256Hex(pw + salt), salt };
-        database.write_passwd(uid, p);
+        int code = database.write_passwd(uid, p);
+
+        // print status message
+        if (code > 0) {
+            System.out.printf("[+] Password changed.\n");
+        } else {
+            System.out.printf("[-] Failed to change password.\n");
+        }
     }
 
     public static void passwd(String user) {
