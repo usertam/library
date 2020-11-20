@@ -8,7 +8,11 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 
 public class auth {
 
-    public static int uid = -1;
+    private static int uid = -1;
+
+    public static int uid() {
+        return auth.uid;
+    }
 
     public static void whoami() {
         String user[] = database.query_user(auth.uid);

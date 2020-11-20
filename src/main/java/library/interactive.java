@@ -40,7 +40,7 @@ public class interactive {
                 break;
             case "passwd":
                 if (cmd.length > 1) auth.passwd(cmd[1]);
-                else auth.passwd(auth.uid);
+                else auth.passwd(auth.uid());
                 break;
             case "ls":
                 database.query_books_example();

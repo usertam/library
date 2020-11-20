@@ -304,7 +304,7 @@ public class database {
     }
 
     public static void reserve_example(String isbn) {
-        Object status[] = { 1, auth.uid, "" };
+        Object status[] = { 1, auth.uid(), "" };
         int i = database.write_status(isbn, status);
         if (i > 0) {
             System.out.printf("[+] Success\n");
