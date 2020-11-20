@@ -75,6 +75,53 @@ public class database {
         }
     }
 
+    public static List<String[]> query_books(String word) {
+
+        /** 
+         * Return a list of arrays, which contain book details. 
+         * 
+         * list<books[]>─┬─book1[]
+         *               ├─book2[]
+         *               └─...
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, String.format("%%%s%%", word));
+            pstmt.setString(2, String.format("%%%s%%", word));
+            ResultSet rs = pstmt.executeQuery();
+            List<String[]> list = new ArrayList<>();
+            while (rs.next()) {
+                String book[] = {
+                    rs.getString("isbn"), 
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("pub"),
+                    rs.getString("status"),
+                    rs.getString("status_uid"),
+                    rs.getString("status_due"),
+                };
+                list.add(book);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     public static List<String[]> query_users() {
 
         /** 
@@ -284,32 +331,6 @@ public class database {
             // unable to update, print error message and return 0
             System.out.println(e.getMessage());
             return 0;
-        }
-    }
-
-    public static void query_books_example() {
-
-        // print message
-        System.out.println("[*] Listing all library collections.");
-
-        // get list of book details (in separate array)
-        List<String[]> list = database.query_books();
-
-        // print formatted output
-        System.out.println("=".repeat(64));
-        System.out.println("ISBN\t\tTITLE");
-        System.out.println("=".repeat(64));
-        for (String[] b : list) System.out.printf("%s\t%s\n", b[0], b[1]);
-        System.out.println("=".repeat(64));
-    }
-
-    public static void reserve_example(String isbn) {
-        Object status[] = { 1, auth.uid(), "" };
-        int i = database.write_status(isbn, status);
-        if (i > 0) {
-            System.out.printf("[+] Success\n");
-        } else {
-            System.out.printf("[-] Failed\n");
         }
     }
 }
