@@ -136,8 +136,8 @@ class sc {
             return input;
         }
         catch (java.util.NoSuchElementException e) {
-            System.out.printf("\n");
-            System.out.printf("[*] EOF detected, exiting.\n");
+            System.out.println();
+            System.out.println("[*] EOF detected, exiting.");
             app.exit(0);
             return null;
         }
@@ -154,12 +154,13 @@ class sc {
                 return null;
             }
         } else {
-            System.out.printf("\n");
-            System.out.printf("[!] Unable to access the console.\n");
-            System.out.printf("  -  This might be caused by running the program from an IDE.\n");
-            System.out.printf("  -  Run me in an interactive command line to fix this.\n");
-            System.out.printf("[*] Fall back to default prompting method.\n");
-            System.out.printf("[!] The password will be displayed in plain text.\n");
+            System.out.println();
+            System.out.println("[!] Unable to access the console.");
+            System.out.println("  -  This might be caused by running the program from an IDE.");
+            System.out.println("  -  Run me in an interactive command line to fix this.");
+            System.out.println();
+            System.out.println("[*] Fall back to default prompting method.");
+            System.out.println("[!] The password will be displayed in plain text.");
             return prompt(s);
         }
     }
