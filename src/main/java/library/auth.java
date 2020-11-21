@@ -72,7 +72,7 @@ public class auth {
         /** Method to switch user without entering password, for admin. */
 
         // access control: allow admin only
-        if (!auth.check_user(auth.uid(), 0)) { 
+        if (!auth.check_user(auth.uid(), 0)) {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
