@@ -93,4 +93,23 @@ public class book {
         int uid = database.query_uid(user);
         records(uid);
     }
+
+    public static void new_book() {
+
+        // get new book info
+        String book[] = {
+            sc.prompt("Enter the ISBN: "),
+            sc.prompt("Enter the title: "),
+            sc.prompt("Enter the author: "),
+            sc.prompt("Enter the publication date (YYYY-MM-DD): ")
+        };
+
+        // update database and print status
+        int i = database.add_book(book);
+        if (i > 0) {
+            System.out.println("[+] New book entry added.");
+        } else {
+            System.out.println("[-] Failed to add a new book entry.");
+        }
+    }
 }

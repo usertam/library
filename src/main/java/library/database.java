@@ -379,4 +379,72 @@ public class database {
             return 0;
         }
     }
+
+    public static int add_book(String[] book) {
+
+        /** 
+         * Take string array as argument. 
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        └─book[3] => publication date
+         * 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "INSERT INTO books (isbn, title, author, pub, status) VALUES (?, ?, ?, ?, 0)";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, book[0]);
+            pstmt.setString(2, book[1]);
+            pstmt.setString(3, book[2]);
+            pstmt.setString(4, book[3]);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int add_user(String[] user) {
+
+        /** 
+         * Take string array as argument. 
+         * 
+         * user[]─┬─user[0] (int) => uid / user id
+         *        ├─user[1] (String) => user
+         *        └─user[2] (String) => name
+         * 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "INSERT INTO users (uid, user, name) VALUES (?, ?, ?)";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, user[0]);
+            pstmt.setString(2, user[1]);
+            pstmt.setString(3, user[2]);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
 }
