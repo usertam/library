@@ -140,10 +140,10 @@ public class interactive {
         //Commands available for guests
         System.out.println("[*} Listing all help commands.");
         System.out.println("Search <keywords> Searches for a book using keywords.");
-        System.out.println("ls\t\t Displays all library collections.");
+        System.out.println("Ls\t\t Displays all library collections.");
         System.out.println("Info <ISBN>\t Displays detailed book information.");
-        System.out.println("login");
-        System.out.println("logout");
+        System.out.println("Login");
+        System.out.println("Logout");
 
          //Commands available for user
          if (auth.check_user(auth.uid(),1)) {
