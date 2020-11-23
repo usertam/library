@@ -112,4 +112,22 @@ public class book {
             System.out.println("[-] Failed to add a new book entry.");
         }
     }
+    
+    public static void new_user() {
+
+        // get new user info
+        String user[] = {
+            sc.prompt("Enter the user id: "),
+            sc.prompt("Enter the username: "),
+            sc.prompt("Enter the full name: "),
+        };
+
+        // update database and print status
+        int i = database.add_user(user);
+        if (i > 0) {
+            System.out.println("[+] New user entry added.");
+        } else {
+            System.out.println("[-] Failed to add a new user entry.");
+        }
+    }
 }

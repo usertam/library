@@ -24,8 +24,11 @@ public class interactive {
         // call requested methods here
         switch (cmd[0]) {
             // test methods may be changed later
-            case "add_book":
+            case "addbook":
                 book.new_book();
+                break;
+            case "adduser":
+                book.new_user();
                 break;
             case "records":
                 if (cmd.length > 1) book.records(cmd[1]);
