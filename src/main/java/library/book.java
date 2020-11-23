@@ -115,24 +115,6 @@ public class book {
             System.out.println("[-] Failed to add a new book entry.");
         }
     }
-    
-    public static void new_user() {
-
-        // get new user info
-        String user[] = {
-            sc.prompt("Enter the user id: "),
-            sc.prompt("Enter the username: "),
-            sc.prompt("Enter the full name: "),
-        };
-
-        // update database and print status
-        int i = database.add_user(user);
-        if (i > 0) {
-            System.out.println("[+] New user entry added.");
-        } else {
-            System.out.println("[-] Failed to add a new user entry.");
-        }
-    }
 
     public static void del_book() {
 
@@ -145,20 +127,6 @@ public class book {
             System.out.println("[+] Removed the book entry.");
         } else {
             System.out.println("[-] Failed to remove the book entry.");
-        }
-    }
-    
-    public static void del_user() {
-
-        // get user id
-        String uid = sc.prompt("Enter the user id: ");
-
-        // update database and print status
-        int i = database.del_user(uid);
-        if (i > 0) {
-            System.out.println("[+] Removed the user entry.");
-        } else {
-            System.out.println("[-] Failed to remove the user entry.");
         }
     }
 }

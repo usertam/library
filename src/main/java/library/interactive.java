@@ -28,13 +28,13 @@ public class interactive {
                 book.del_book();
                 break;
             case "deluser":
-                book.del_user();
+                auth.del_user();
                 break;
             case "addbook":
                 book.new_book();
                 break;
             case "adduser":
-                book.new_user();
+                auth.new_user();
                 break;
             case "records":
                 if (cmd.length > 1) book.records(cmd[1]);
@@ -49,7 +49,7 @@ public class interactive {
                 else System.out.printf("[-] No ISBN supplied.\n");
                 break;
             case "ls":
-                book.query();
+                book.list();
                 break;
             case "whoami":
                 auth.whoami();
