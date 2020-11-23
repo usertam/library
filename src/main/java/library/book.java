@@ -15,14 +15,8 @@ public class book {
         // print formatted output
         int i = 0;
         for (String[] b : list) {
-            System.out.println("=".repeat(64));
-            System.out.printf("%d.\n", ++i);
-            System.out.printf("ISBN: %s\n", b[0]);
-            System.out.printf("Title: %s\n", b[1]);
-            System.out.printf("Author: %s\n", b[2]);
-            System.out.printf("Publication date: %s\n", b[3]);
-            System.out.printf("Status: %s\n", database.translate_status(b[4]));
-            System.out.println("=".repeat(64));
+            i++;
+            ls_detail(b, i);
         }
     }
 
@@ -36,7 +30,7 @@ public class book {
         }
     }
 
-    public static void query() {
+    public static void list() {
 
         // print message
         System.out.println("[*] Listing all library collections.");
@@ -45,11 +39,11 @@ public class book {
         List<String[]> list = database.query_books();
 
         // print formatted output
-        System.out.println("=".repeat(64));
-        System.out.println("ISBN\t\tTITLE");
-        System.out.println("=".repeat(64));
-        for (String[] b : list) System.out.printf("%s\t%s\n", b[0], b[1]);
-        System.out.println("=".repeat(64));
+        int i = 0;
+        for (String[] b : list) {
+            i++;
+            ls_simple(b, i);
+        }
     }
 
     public static void records(int uid) {
@@ -57,7 +51,7 @@ public class book {
         /**
          * Access control
          * 1. Deny guest access
-         * 2. Allow users to change own password only, except admin
+         * 2. Allow users to change own records only, except admin
          */
 
         if ( !auth.check_user(auth.uid(), 1) || ( !auth.check_user(auth.uid(), 0) && (uid != auth.uid()) ) ) { 
@@ -77,21 +71,30 @@ public class book {
         // print formatted output
         int i = 0;
         for (String[] b : list) {
-            System.out.println("=".repeat(64));
-            System.out.printf("[%d]\n", ++i);
-            System.out.printf("ISBN: %s\n", b[0]);
-            System.out.printf("Title: %s\n", b[1]);
-            System.out.printf("Author: %s\n", b[2]);
-            System.out.printf("Publication date: %s\n", b[3]);
-            System.out.printf("Status: %s\n", database.translate_status(b[4]));
-            System.out.printf("Due date: %s\n", b[6]);
-            System.out.println("=".repeat(64));
+            i++;
+            ls_detail(b, i);
         }
     }
 
     public static void records(String user) {
         int uid = database.query_uid(user);
         records(uid);
+    }
+
+    public static void ls_simple(String[] b, int i) {
+        if (i != 0) System.out.printf("%d. \t%s \t%s \n", i, b[0], b[1]);
+        else System.out.printf("%s \t%s \n", b[0], b[1]);
+    }
+
+    public static void ls_detail(String[] b, int i) {
+        System.out.println("=".repeat(64));
+        if (i != 0) System.out.printf("%d.\n", i);
+        System.out.printf("ISBN: %s\n", b[0]);
+        System.out.printf("Title: %s\n", b[1]);
+        System.out.printf("Author: %s\n", b[2]);
+        System.out.printf("Publication date: %s\n", b[3]);
+        System.out.printf("Status: %s\n", database.translate_status(b[4]));
+        System.out.println("=".repeat(64));
     }
 
     public static void new_book() {
