@@ -24,6 +24,12 @@ public class interactive {
         // call requested methods here
         switch (cmd[0]) {
             // test methods may be changed later
+            case "delbook":
+                book.del_book();
+                break;
+            case "deluser":
+                book.del_user();
+                break;
             case "addbook":
                 book.new_book();
                 break;

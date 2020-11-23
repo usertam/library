@@ -450,6 +450,56 @@ public class database {
         }
     }
 
+    public static int del_book(String isbn) {
+
+        /** 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "DELETE FROM books WHERE isbn = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, isbn);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int del_user(String uid) {
+
+        /** 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "DELETE FROM users WHERE uid = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, uid);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
     public static String translate_status(String status){
         switch (status) {
             case "0":

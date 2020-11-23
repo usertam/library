@@ -130,4 +130,32 @@ public class book {
             System.out.println("[-] Failed to add a new user entry.");
         }
     }
+
+    public static void del_book() {
+
+        // get book isbn
+        String isbn = sc.prompt("Enter the ISBN: ");
+
+        // update database and print status
+        int i = database.del_book(isbn);
+        if (i > 0) {
+            System.out.println("[+] Removed the book entry.");
+        } else {
+            System.out.println("[-] Failed to remove the book entry.");
+        }
+    }
+    
+    public static void del_user() {
+
+        // get user id
+        String uid = sc.prompt("Enter the user id: ");
+
+        // update database and print status
+        int i = database.del_user(uid);
+        if (i > 0) {
+            System.out.println("[+] Removed the user entry.");
+        } else {
+            System.out.println("[-] Failed to remove the user entry.");
+        }
+    }
 }
