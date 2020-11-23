@@ -70,6 +70,15 @@ public class interactive {
                 System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
         }
     }
+
+    public static void greet() {
+
+        // print message
+        System.out.println("=".repeat(64));
+        System.out.println("A heartful welcome to our library management system!");
+        System.out.println("Please feel free to enter 'help' to see available commands.");
+        System.out.println("=".repeat(64));
+    }
 }
 
 class sc {

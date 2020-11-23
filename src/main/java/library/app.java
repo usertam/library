@@ -12,6 +12,7 @@ public class app {
             interactive.eval(args);
             app.exit(0);
         } else {
+            interactive.greet();
             interactive.start();
         }
     }
