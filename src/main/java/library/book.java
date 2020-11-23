@@ -21,7 +21,7 @@ public class book {
             System.out.printf("Title: %s\n", b[1]);
             System.out.printf("Author: %s\n", b[2]);
             System.out.printf("Publication date: %s\n", b[3]);
-            System.out.printf("Status: %s\n", b[4]);
+            System.out.printf("Status: %s\n", database.translate_status(b[4]));
             System.out.println("=".repeat(64));
         }
     }
@@ -83,7 +83,7 @@ public class book {
             System.out.printf("Title: %s\n", b[1]);
             System.out.printf("Author: %s\n", b[2]);
             System.out.printf("Publication date: %s\n", b[3]);
-            System.out.printf("Status: %s\n", b[4]);
+            System.out.printf("Status: %s\n", database.translate_status(b[4]));
             System.out.printf("Due date: %s\n", b[6]);
             System.out.println("=".repeat(64));
         }

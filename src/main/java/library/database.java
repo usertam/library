@@ -447,4 +447,17 @@ public class database {
             return 0;
         }
     }
+
+    public static String translate_status(String status){
+        switch (status) {
+            case "0":
+                return "free";
+            case "1":
+                return "reserved";
+            case "2":
+                return "borrowed";
+            default:
+                return "unknown";
+        } 
+    }
 }
