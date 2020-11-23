@@ -1,6 +1,8 @@
 package library;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -459,5 +461,12 @@ public class database {
             default:
                 return "unknown";
         } 
+    }
+
+    public static String due_date(){
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime due = now.plusDays(7);
+        return f.format(due);
     }
 }
