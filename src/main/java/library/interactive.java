@@ -42,6 +42,9 @@ public class interactive {
                 if (cmd.length > 1) book.reserve(cmd[1]);
                 else System.out.printf("[-] No ISBN supplied.\n");
                 break;
+            case "help":
+                interactive.help();
+                break;       
             case "ls":
                 book.query();
                 break;
@@ -130,6 +133,33 @@ public class interactive {
             void quote() { current = quote; }
             void reset() { current = space; }
         }
+    }
+    
+    public static void help() {
+        
+        //Commands available for guests
+        System.out.println("[*} Listing all help commands.");
+        System.out.println("Search <keywords> Searches for a book using keywords.");
+        System.out.println("ls\t\t Displays all library collections.");
+        System.out.println("Info <ISBN>\t Displays detailed book information.");
+        System.out.println("login");
+        System.out.println("logout");
+
+         //Commands available for user
+         if (auth.check_user(auth.uid(),1)) {
+         System.out.println("Reserve <ISBN>\t Attempts to reserve a book.");
+         System.out.println("Records <user>\t Shows user records.");
+        }
+
+        //Commands available for admin
+        if (auth.check_user(auth.uid(),0)) {
+         System.out.println("Records <UID>\t Shows a specific user's records.");    
+         System.out.println("Student <user>\t Reserves books for borrowing.");
+         System.out.println("Admin <user>\t Changes user’s password.");
+      // System.out.println("Admin <user?>\t Changes user's username.");
+      // System.out.println("Add <user>\t Adds user.");
+      // System.out.println("Delete <user>\t Deletes user.");
+        }     
     }
 }
 
