@@ -65,7 +65,7 @@ public class interactive {
                 database.query_books_example();
                 break;
             case "exit":
-                System.out.println("[*] Time of exit: " + interactive.currect_time());
+                System.out.println("[*] Time of exit: " + interactive.time());
                 app.exit(0);
                 break;
             default:
@@ -82,7 +82,7 @@ public class interactive {
         System.out.println("=".repeat(64));
     }
     
-    public static String currect_time() {
+    public static String time() {
         
         DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
