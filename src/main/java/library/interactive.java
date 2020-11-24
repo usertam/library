@@ -42,14 +42,14 @@ public class interactive {
             // test methods may be changed later
             case "reserve":
                 if (cmd.length > 1) database.reserve_example(cmd[1]);
-                else System.out.printf("[-] No ISBN supplied.\n");
+                else System.out.println("[-] No ISBN supplied.");
                 break;
             case "whoami":
                 auth.whoami();
                 break;
             case "su":
                 if (cmd.length > 1) auth.su(cmd[1]);
-                else System.out.printf("[-] No user supplied.\n");
+                else System.out.println("[-] No user supplied.");
                 break;
             case "login":
                 if (cmd.length > 1) auth.login(cmd[1]);
@@ -66,11 +66,11 @@ public class interactive {
                 database.query_books_example();
                 break;
             case "exit":
-                System.out.println("The Exit Time is: "+interactive.currect_time());
+                System.out.println("[*] Time of exit: " + interactive.currect_time());
                 app.exit(0);
                 break;
             default:
-                System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
+                System.out.println("[*] Unknown command: " + Arrays.toString(cmd));
         }
     }
 
