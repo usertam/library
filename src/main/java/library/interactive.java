@@ -1,5 +1,7 @@
 package library;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class interactive {
         if (cmd.length == 0) return;
 
         // call requested methods here
-        switch (cmd[0]) {
+        switch (cmd[0].toLowerCase()) {
             // test methods may be changed later
             case "reserve":
                 if (cmd.length > 1) database.reserve_example(cmd[1]);
@@ -64,6 +66,7 @@ public class interactive {
                 database.query_books_example();
                 break;
             case "exit":
+                System.out.println("The Exit Time is: "+interactive.currect_time());
                 app.exit(0);
                 break;
             default:
@@ -78,6 +81,13 @@ public class interactive {
         System.out.println("A heartful welcome to our library management system!");
         System.out.println("Please feel free to enter 'help' to see available commands.");
         System.out.println("=".repeat(64));
+    }
+    
+    public static String currect_time() {
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return f.format(now);
     }
 }
 
