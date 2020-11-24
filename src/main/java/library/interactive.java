@@ -44,6 +44,10 @@ public class interactive {
                 if (cmd.length > 1) book.search(cmd[1]);
                 else System.out.printf("[-] No keyword supplied.\n");
                 break;
+            case "borrow":
+                if (cmd.length > 1) book.borrow(cmd[1]);
+                else System.out.printf("[-] No ISBN supplied.\n");
+                break;
             case "reserve":
                 if (cmd.length > 1) book.reserve(cmd[1]);
                 else System.out.printf("[-] No ISBN supplied.\n");

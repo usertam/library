@@ -1,8 +1,6 @@
 package library;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -498,25 +496,5 @@ public class database {
             System.out.println(e.getMessage());
             return 0;
         }
-    }
-
-    public static String translate_status(String status){
-        switch (status) {
-            case "0":
-                return "free";
-            case "1":
-                return "reserved";
-            case "2":
-                return "borrowed";
-            default:
-                return "unknown";
-        } 
-    }
-
-    public static String due_date(){
-        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime due = now.plusDays(7);
-        return f.format(due);
     }
 }
