@@ -139,26 +139,25 @@ public class interactive {
         
         //Commands available for guests
         System.out.println("[*} Listing all help commands.");
-        System.out.println("Search <keywords> Searches for a book using keywords.");
-        System.out.println("Ls\t\t Displays all library collections.");
-        System.out.println("Info <ISBN>\t Displays detailed book information.");
-        System.out.println("Login");
-        System.out.println("Logout");
+        System.out.println("search <keywords> Searches for a book using keywords.");
+        System.out.println("ls\t\t Displays all library collections.");
+        System.out.println("info <ISBN>\t Displays detailed book information.");
+        System.out.println("login");
+        System.out.println("logout");
 
          //Commands available for user
          if (auth.check_user(auth.uid(),1)) {
-         System.out.println("Reserve <ISBN>\t Attempts to reserve a book.");
-         System.out.println("Records <user>\t Shows user records.");
+         System.out.println("reserve <ISBN>\t Attempts to reserve a book.");
+         System.out.println("records <user>\t Shows user records.");
         }
 
         //Commands available for admin
         if (auth.check_user(auth.uid(),0)) {
-         System.out.println("Records <UID>\t Shows a specific user's records.");    
-         System.out.println("Student <user>\t Reserves books for borrowing.");
-         System.out.println("Admin <user>\t Changes user’s password.");
-      // System.out.println("Admin <user?>\t Changes user's username.");
-      // System.out.println("Add <user>\t Adds user.");
-      // System.out.println("Delete <user>\t Deletes user.");
+         System.out.println("records <UID>\t Shows a specific user's records.");    
+         System.out.println("student <user>\t Reserves books for borrowing.");
+         System.out.println("admin <user>\t Changes user’s password.");
+      // System.out.println("add <user>\t Adds user.");
+      // System.out.println("delete <user>\t Deletes user.");
         }     
     }
 }
