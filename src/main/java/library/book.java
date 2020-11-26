@@ -13,8 +13,13 @@ public class book {
     }
 
     public static void search(String word) {
-        System.out.println("[*] Listing matching results.");
-        list_detail(database.query_books(word));
+        List<String[]> list = database.query_books(word);
+        if (list.size() > 0) {
+            System.out.println("[*] Listing matching results.");
+            list_detail(list);
+        } else {
+            System.out.println("[*] No matching results found.");
+        }
     }
 
     public static void records(int uid) {
