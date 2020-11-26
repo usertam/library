@@ -11,10 +11,6 @@ public class auth {
     private static int uid = -1;
     private static int suid = -1;
 
-    public static int uid() {
-        return auth.uid;
-    }
-
     public static void whoami() {
         String user[] = database.query_user(auth.uid);
         System.out.printf("[*] %s, user %s (%s)\n", user[2], user[1], user[0]);
@@ -138,6 +134,10 @@ public class auth {
     public static void passwd(String user) {
         int uid = database.query_uid(user);
         passwd(uid);
+    }
+
+    public static int uid() {
+        return auth.uid;
     }
 
     public static boolean check_user(int uid, int mode) {
