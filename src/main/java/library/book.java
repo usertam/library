@@ -55,13 +55,26 @@ public class book {
             return;
         }
 
+        // check book status
+        int status = check_status(isbn);
+        switch (status) {
+            case -1:
+                System.out.println("[-] The book does not exist in the database.");
+                return;
+            case 1:
+                break;
+            default:
+                System.out.println("[-] The book is not available.");
+                return;
+        }
+
         // craft status payload
-        Object status[] = {
+        Object payload[] = {
             1, auth.uid(), null
         };
 
         // execute and print status message
-        if (database.write_status(isbn, status) > 0) {
+        if (database.write_status(isbn, payload) > 0) {
             System.out.println("[+] Book reserved.");
         } else {
             System.out.println("[-] Failed to reserve the book.");
@@ -76,13 +89,26 @@ public class book {
             return;
         }
 
+        // check book status
+        int status = check_status(isbn);
+        switch (status) {
+            case -1:
+                System.out.println("[-] The book does not exist in the database.");
+                return;
+            case 1:
+                break;
+            default:
+                System.out.println("[-] The book is not available.");
+                return;
+        }
+
         // craft status payload
-        Object status[] = {
+        Object payload[] = {
             2, auth.uid(), expiry_date()
         };
 
         // execute and print status message
-        if (database.write_status(isbn, status) > 0) {
+        if (database.write_status(isbn, payload) > 0) {
             System.out.println("[+] Book borrowed.");
         } else {
             System.out.println("[-] Failed to borrow the book.");
@@ -183,6 +209,29 @@ public class book {
 
     private static void print_hr(int i){
         System.out.println("=".repeat(i));
+    }
+
+    private static int check_status(String isbn){
+
+        /**
+         * Return values
+         * 
+         * Available:       1
+         * Not available:   0
+         * Not exist:       -1
+         */
+
+        String book[] = database.query_book(isbn);
+        if (book == null) {
+            // the book does not exist
+            return -1;
+        } else if (book[4].equals("0")) {
+            // the book is available
+            return 1;
+        } else {
+            // the book is not available
+            return 0;
+        }
     }
 
     private static String status_text(String status){
