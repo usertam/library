@@ -43,13 +43,13 @@ public class interactive {
                 book.delete();
                 break;
             case "deluser":
-                auth.del_user();
+                auth.delete();
                 break;
             case "addbook":
                 book.insert();
                 break;
             case "adduser":
-                auth.new_user();
+                auth.insert();
                 break;
             case "records":
                 if (cmd.length > 1) book.records(cmd[1]);
@@ -133,7 +133,7 @@ public class interactive {
         System.out.println("=".repeat(80));
 
         // commands available for users
-        if (auth.check_user(auth.uid(), 1)) {
+        if (auth.check(auth.uid(), 1)) {
             System.out.println("reserve\t<ISBN>\t\t Attempt to reserve a book.");
             System.out.println("borrow\t<ISBN>\t\t Attempt to borrow a book.");
             System.out.println("records\t\t\t Show your personal records.");
@@ -143,7 +143,7 @@ public class interactive {
         }
 
         // commands available for admin
-        if (auth.check_user(auth.uid(), 0)) {
+        if (auth.check(auth.uid(), 0)) {
             System.out.println("su\t<user>\t\t Impersonate a specific user, without password.");
             System.out.println("\t\t\t   To return to the original user, use \"logout\". ");
             System.out.println("records\t<user>\t\t Show records of a specific user.");

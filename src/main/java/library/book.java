@@ -30,7 +30,7 @@ public class book {
          * 2. Allow users to change own records only, except admin
          */
 
-        if ( !auth.check_user(auth.uid(), 1) || ( !auth.check_user(auth.uid(), 0) && (uid != auth.uid()) ) ) { 
+        if ( !auth.check(auth.uid(), 1) || ( !auth.check(auth.uid(), 0) && (uid != auth.uid()) ) ) { 
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
@@ -55,7 +55,7 @@ public class book {
     public static void reserve(String isbn) {
 
         // access control: deny guests
-        if (!auth.check_user(auth.uid(), 1)) {
+        if (!auth.check(auth.uid(), 1)) {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
@@ -89,7 +89,7 @@ public class book {
     public static void borrow(String isbn) {
 
         // access control: deny guests
-        if (!auth.check_user(auth.uid(), 1)) {
+        if (!auth.check(auth.uid(), 1)) {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
@@ -192,7 +192,7 @@ public class book {
             String status = status_text(b[4]);
 
             // print book status
-            if (auth.check_user(auth.uid(), 0) && !b[4].equals("0")) {
+            if (auth.check(auth.uid(), 0) && !b[4].equals("0")) {
                 // user is admin and book is not free, print verbose user info
                 int uid = Integer.parseInt(b[5]);
                 String[] u = database.query_user(uid);

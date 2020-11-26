@@ -25,7 +25,7 @@ public class auth {
         int uid = database.query_uid(user);
 
         // check if the supplied user id exists
-        if (!check_user(uid, 1)) {
+        if (!check(uid, 1)) {
             System.out.printf("[-] Unknown user.\n");
             return;
         }
@@ -68,7 +68,7 @@ public class auth {
         /** Method to switch user without entering password, for admin. */
 
         // access control: allow admin only
-        if (!auth.check_user(auth.uid(), 0)) {
+        if (!auth.check(auth.uid(), 0)) {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
@@ -91,13 +91,13 @@ public class auth {
          * 2. Allow users to change own password only, except admin
          */
 
-        if ( !check_user(auth.uid, 1) || ( !check_user(auth.uid, 0) && (uid != auth.uid) ) ) { 
+        if ( !check(auth.uid, 1) || ( !check(auth.uid, 0) && (uid != auth.uid) ) ) {
             System.out.printf("[-] You don't have permission to perform this action.\n");
             return;
         }
 
         // check the supplied uid (check uid)
-        if (!check_user(uid, 1)) {
+        if (!check(uid, 1)) {
             System.out.printf("[-] Unknown user.\n");
             return;
         }
@@ -119,7 +119,7 @@ public class auth {
         }
 
         // generate salt and write password in hashed form
-        String salt = get_salt();
+        String salt = salt();
         String p[] = { sha256Hex(pw + salt), salt };
         int code = database.write_passwd(uid, p);
 
@@ -136,11 +136,43 @@ public class auth {
         passwd(uid);
     }
 
+    public static void insert() {
+
+        // get new user info
+        String user[] = {
+            sc.prompt("Enter the user id: "),
+            sc.prompt("Enter the username: "),
+            sc.prompt("Enter the full name: "),
+        };
+
+        // update database and print status
+        int i = database.add_user(user);
+        if (i > 0) {
+            System.out.println("[+] New user entry added.");
+        } else {
+            System.out.println("[-] Failed to add a new user entry.");
+        }
+    }
+
+    public static void delete() {
+
+        // get user id
+        String uid = sc.prompt("Enter the user id: ");
+
+        // update database and print status
+        int i = database.del_user(uid);
+        if (i > 0) {
+            System.out.println("[+] Removed the user entry.");
+        } else {
+            System.out.println("[-] Failed to remove the user entry.");
+        }
+    }
+
     public static int uid() {
         return auth.uid;
     }
 
-    public static boolean check_user(int uid, int mode) {
+    public static boolean check(int uid, int mode) {
 
         /**
          * User checking method
@@ -162,7 +194,7 @@ public class auth {
         return false;
     }
 
-    private static String get_salt() {
+    private static String salt() {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[8];
         random.nextBytes(bytes);
