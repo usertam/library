@@ -6,14 +6,15 @@ import java.util.List;
 
 public class book {
 
-    public static void list() {
+    public static void index() {
+        // TODO: print only an limited amount of books for one page
         System.out.println("[*] Listing all library collections.");
-        ls_simple(database.query_books());
+        list_simple(database.query_books());
     }
 
     public static void search(String word) {
         System.out.println("[*] Listing matching results.");
-        ls_detail(database.query_books(word));
+        list_detail(database.query_books(word));
     }
 
     public static void records(int uid) {
@@ -35,7 +36,7 @@ public class book {
 
         if (list.size() > 0) {
             System.out.printf("[*] The records of user %s.\n", u[1]);
-            ls_detail(list);
+            list_detail(list);
         } else {
             System.out.printf("[*] No records of user %s found.\n", u[1]);
         }
@@ -77,7 +78,7 @@ public class book {
 
         // craft status payload
         Object status[] = {
-            2, auth.uid(), get_expiry()
+            2, auth.uid(), expiry_date()
         };
 
         // execute and print status message
@@ -88,7 +89,7 @@ public class book {
         }
     }
 
-    public static void new_book() {
+    public static void insert() {
 
         // get new book info
         String book[] = {
@@ -106,7 +107,7 @@ public class book {
         }
     }
 
-    public static void del_book() {
+    public static void delete() {
 
         // get book isbn
         String isbn = sc.prompt("Enter the ISBN: ");
@@ -119,7 +120,7 @@ public class book {
         }
     }
 
-    private static void ls_simple(List<String[]> list) {
+    private static void list_simple(List<String[]> list) {
 
         // variables
         int i = 0;
@@ -136,7 +137,7 @@ public class book {
         print_hr(80);
     }
 
-    private static void ls_detail(List<String[]> list) {
+    private static void list_detail(List<String[]> list) {
 
         // variables
         int i = 0;
@@ -197,7 +198,7 @@ public class book {
         }
     }
 
-    private static String get_expiry(){
+    private static String expiry_date(){
         DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime due = now.plusDays(7);

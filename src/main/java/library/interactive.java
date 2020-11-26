@@ -25,13 +25,13 @@ public class interactive {
         switch (cmd[0]) {
             // test methods may be changed later
             case "delbook":
-                book.del_book();
+                book.delete();
                 break;
             case "deluser":
                 auth.del_user();
                 break;
             case "addbook":
-                book.new_book();
+                book.insert();
                 break;
             case "adduser":
                 auth.new_user();
@@ -53,7 +53,7 @@ public class interactive {
                 else System.out.printf("[-] No ISBN supplied.\n");
                 break;
             case "ls":
-                book.list();
+                book.index();
                 break;
             case "whoami":
                 auth.whoami();
