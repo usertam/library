@@ -9,10 +9,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 public class auth {
 
     private static int uid = -1;
-
-    public static int uid() {
-        return auth.uid;
-    }
+    private static int suid = -1;
 
     public static void whoami() {
         String user[] = database.query_user(auth.uid);
@@ -56,12 +53,34 @@ public class auth {
     }
 
     public static void logout() {
+        if (auth.suid >= 0) {
+            setuid(auth.suid);
+            setsuid(-1);
+            System.out.printf("[+] Returned to the original user.\n");
+        } else {
+            setuid(-1);
+            System.out.printf("[+] Logged out.\n");
+        }
+    }
 
-        // set user as nobody
-        setuid(-1);
+    public static void su(String user) {
+
+        /** Method to switch user without entering password, for admin. */
+
+        // access control: allow admin only
+        if (!auth.check_user(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return;
+        }
+
+        // set uid and suid
+        int uid = database.query_uid(user);
+        setsuid(auth.uid);
+        setuid(uid);
 
         // print message
-        System.out.printf("[+] Logged out.\n");
+        String u[] = database.query_user(uid);
+        System.out.printf("[+] Switched user to %s (%s)\n", u[1], u[0]);
     }
 
     public static void passwd(int uid) {
@@ -117,36 +136,8 @@ public class auth {
         passwd(uid);
     }
 
-    public static void new_user() {
-
-        // get new user info
-        String user[] = {
-            sc.prompt("Enter the user id: "),
-            sc.prompt("Enter the username: "),
-            sc.prompt("Enter the full name: "),
-        };
-
-        // update database and print status
-        int i = database.add_user(user);
-        if (i > 0) {
-            System.out.println("[+] New user entry added.");
-        } else {
-            System.out.println("[-] Failed to add a new user entry.");
-        }
-    }
-
-    public static void del_user() {
-
-        // get user id
-        String uid = sc.prompt("Enter the user id: ");
-
-        // update database and print status
-        int i = database.del_user(uid);
-        if (i > 0) {
-            System.out.println("[+] Removed the user entry.");
-        } else {
-            System.out.println("[-] Failed to remove the user entry.");
-        }
+    public static int uid() {
+        return auth.uid;
     }
 
     public static boolean check_user(int uid, int mode) {
@@ -182,5 +173,9 @@ public class auth {
 
     private static void setuid(int uid) {
         auth.uid = uid;
+    }
+
+    private static void setsuid(int uid) {
+        auth.suid = uid;
     }
 }

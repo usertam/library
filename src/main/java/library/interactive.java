@@ -1,8 +1,13 @@
 package library;
 
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class interactive {
 
@@ -11,9 +16,19 @@ public class interactive {
         // interactive cycles
         while (true) {
             String line = sc.prompt("> ");
-            String[] cmd = parser.spilt(line);
+            String[] cmd = split(line);
             eval(cmd);
         }
+    }
+
+    public static String[] split(String line) {
+
+        // use regex to split the line
+        List<String> cmd = new ArrayList<>();
+        Pattern p = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
+        Matcher m = p.matcher(line);
+        while (m.find()) cmd.add(m.group().replaceAll("[\"']", ""));
+        return cmd.toArray(new String[0]);
     }
 
     public static void eval(String[] cmd) {
@@ -22,7 +37,7 @@ public class interactive {
         if (cmd.length == 0) return;
 
         // call requested methods here
-        switch (cmd[0]) {
+        switch (cmd[0].toLowerCase()) {
             // test methods may be changed later
             case "delbook":
                 book.delete();
@@ -58,6 +73,10 @@ public class interactive {
             case "whoami":
                 auth.whoami();
                 break;
+            case "su":
+                if (cmd.length > 1) auth.su(cmd[1]);
+                else System.out.println("[-] No user supplied.");
+                break;
             case "login":
                 if (cmd.length > 1) auth.login(cmd[1]);
                 else auth.login();
@@ -70,76 +89,28 @@ public class interactive {
                 else auth.passwd(auth.uid());
                 break;
             case "exit":
+                System.out.println("[*] Time of exit: " + interactive.time());
                 app.exit(0);
                 break;
             default:
-                System.out.printf("[*] Unknown command: %s\n", Arrays.toString(cmd));
+                System.out.println("[*] Unknown command: " + Arrays.toString(cmd));
         }
     }
 
-    private static class parser {
+    public static void greet() {
 
-        private static String[] spilt(String line) {
+        // print message
+        System.out.println("=".repeat(64));
+        System.out.println("A heartful welcome to our library management system!");
+        System.out.println("Please feel free to enter 'help' to see available commands.");
+        System.out.println("=".repeat(64));
+    }
     
-            // create objects from classes
-            parser p = new parser();
-            parser.buf buf = p.new buf();
-            parser.del del = p.new del();
-    
-            // command parsing logic
-            char a[] = line.toCharArray();
-            for (char c : a) {
-                if (c == del.current) {
-                    buf.reset();
-                    del.reset();
-                }
-                else if (c == del.quote) {
-                    buf.reset();
-                    del.quote();
-                }
-                else {
-                    buf.append(c);
-                }
-            }
-    
-            // return a string array
-            return buf.get();
-        }
-    
-        private class buf {
-    
-            // define array list and string buffer
-            ArrayList<String> cmd = new ArrayList<>();
-            StringBuffer buf = new StringBuffer();
-    
-            // method to append char to buffer
-            void append(char c) {
-                buf.append(c);
-            }
-    
-            // method to append the string to arraylist, then clear the buffer
-            void reset() {
-                if (buf.length() > 0) cmd.add(buf.toString());
-                buf.delete(0, buf.length());
-            }
-    
-            // method to return a string array
-            String[] get() {
-                reset();
-                return cmd.stream().toArray(String[]::new);
-            }
-        }
-    
-        private class del {
-    
-            // define delimiter characters
-            char space = ' ', quote = '"';
-            char current = space;
-    
-            // methods to change current delimiter
-            void quote() { current = quote; }
-            void reset() { current = space; }
-        }
+    public static String time() {
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return f.format(now);
     }
 }
 
@@ -156,8 +127,8 @@ class sc {
             return input;
         }
         catch (java.util.NoSuchElementException e) {
-            System.out.printf("\n");
-            System.out.printf("[*] EOF detected, exiting.\n");
+            System.out.println();
+            System.out.println("[*] EOF detected, exiting.");
             app.exit(0);
             return null;
         }
@@ -174,12 +145,13 @@ class sc {
                 return null;
             }
         } else {
-            System.out.printf("\n");
-            System.out.printf("[!] Unable to access the console.\n");
-            System.out.printf("  -  This might be caused by running the program from an IDE.\n");
-            System.out.printf("  -  Run me in an interactive command line to fix this.\n");
-            System.out.printf("[*] Fall back to default prompting method.\n");
-            System.out.printf("[!] The password will be displayed in plain text.\n");
+            System.out.println();
+            System.out.println("[!] Unable to access the console.");
+            System.out.println("  -  This might be caused by running the program from an IDE.");
+            System.out.println("  -  Run me in an interactive command line to fix this.");
+            System.out.println();
+            System.out.println("[*] Fall back to default prompting method.");
+            System.out.println("[!] The password will be displayed in plain text.");
             return prompt(s);
         }
     }
