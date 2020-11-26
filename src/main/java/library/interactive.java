@@ -67,6 +67,9 @@ public class interactive {
                 if (cmd.length > 1) book.reserve(cmd[1]);
                 else System.out.printf("[-] No ISBN supplied.\n");
                 break;
+            case "help":
+                interactive.help();
+                break;       
             case "ls":
                 book.index();
                 break;
@@ -111,6 +114,47 @@ public class interactive {
         DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         return f.format(now);
+    }
+    
+    public static void help() {
+        
+        System.out.println("[*] Listing available commands.");
+        System.out.println("=".repeat(80));
+
+        // commands available for guests
+        System.out.println("search\t<keywords>\t Search for a book using keywords.");
+        System.out.println("\t\t\t   Keywords with spaces can be placed in a quote.");
+        System.out.println("\t\t\t   e.g. search \"key words\" ");
+        System.out.println("ls\t\t\t Display all library collections.");
+        System.out.println("=".repeat(80));
+        System.out.println("whoami\t\t\t Display the current user.");
+        System.out.println("login\t<user>\t\t Login as an user, providing password.");
+        System.out.println("exit\t\t\t Terminate the program.");
+        System.out.println("=".repeat(80));
+
+        // commands available for users
+        if (auth.check_user(auth.uid(), 1)) {
+            System.out.println("reserve\t<ISBN>\t\t Attempt to reserve a book.");
+            System.out.println("borrow\t<ISBN>\t\t Attempt to borrow a book.");
+            System.out.println("records\t\t\t Show your personal records.");
+            System.out.println("passwd\t\t\t Change your user password.");
+            System.out.println("logout\t\t\t Terminate your user session.");
+            System.out.println("=".repeat(80));
+        }
+
+        // commands available for admin
+        if (auth.check_user(auth.uid(), 0)) {
+            System.out.println("su\t<user>\t\t Impersonate a specific user, without password.");
+            System.out.println("\t\t\t   To return to the original user, use \"logout\". ");
+            System.out.println("records\t<user>\t\t Show records of a specific user.");
+            System.out.println("passwd\t<user>\t\t Change password of a specific user.");
+            System.out.println("=".repeat(80));
+            System.out.println("adduser\t<user>\t\t Add an user entry.");
+            System.out.println("deluser\t<user>\t\t Delete an user entry.");
+            System.out.println("addbook\t<ISBN>\t\t Add a book entry.");
+            System.out.println("delbook\t<ISBN>\t\t Delete a book entry.");
+            System.out.println("=".repeat(80));
+        }
     }
 }
 
