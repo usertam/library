@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 public class sqlite {
 
-    public static Connection conn;
+    static Connection conn;
 
-    public static void connect() {
+    static void connect() {
 
         // check if the database file exists
         File db = new File("library.db");
@@ -29,7 +29,7 @@ public class sqlite {
         }
     }
 
-    public static void kill(){
+    static void kill(){
         try {
             if (conn != null) {
                 conn.close();
