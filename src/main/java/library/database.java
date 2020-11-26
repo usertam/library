@@ -78,6 +78,99 @@ public class database {
         }
     }
 
+    public static List<String[]> query_books(String word) {
+
+        /** 
+         * Return a list of arrays, which contain book details. 
+         * 
+         * list<books[]>─┬─book1[]
+         *               ├─book2[]
+         *               └─...
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, String.format("%%%s%%", word));
+            pstmt.setString(2, String.format("%%%s%%", word));
+            ResultSet rs = pstmt.executeQuery();
+            List<String[]> list = new ArrayList<>();
+            while (rs.next()) {
+                String book[] = {
+                    rs.getString("isbn"), 
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("pub"),
+                    rs.getString("status"),
+                    rs.getString("status_uid"),
+                    rs.getString("status_due"),
+                };
+                list.add(book);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public static List<String[]> query_records(int uid) {
+
+        /** 
+         * Return a list of arrays, which contain book details. 
+         * 
+         * list<books[]>─┬─book1[]
+         *               ├─book2[]
+         *               └─...
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        ├─book[3] => publication date
+         *        ├─book[4] => status
+         *        ├─book[5] => user id of user borrowing the book
+         *        └─book[6] => due date
+         */
+
+        // sql query prepare statement
+        String cmd = "SELECT * FROM books WHERE status_uid = ?";
+
+        // query from database, return result
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setInt(1, uid);
+            ResultSet rs = pstmt.executeQuery();
+            List<String[]> list = new ArrayList<>();
+            while (rs.next()) {
+                String book[] = {
+                    rs.getString("isbn"), 
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getString("pub"),
+                    rs.getString("status"),
+                    rs.getString("status_uid"),
+                    rs.getString("status_due"),
+                };
+                list.add(book);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     public static List<String[]> query_users() {
 
         /** 
@@ -290,29 +383,121 @@ public class database {
         }
     }
 
-    public static void query_books_example() {
+    public static int add_book(String[] book) {
 
-        // print message
-        System.out.println("[*] Listing all library collections.");
+        /** 
+         * Take string array as argument. 
+         * 
+         * book[]─┬─book[0] => ISBN
+         *        ├─book[1] => title
+         *        ├─book[2] => author
+         *        └─book[3] => publication date
+         * 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
 
-        // get list of book details (in separate array)
-        List<String[]> list = database.query_books();
+        // sql query prepare statement
+        String cmd = "INSERT INTO books (isbn, title, author, pub, status) VALUES (?, ?, ?, ?, 0)";
 
-        // print formatted output
-        System.out.println("=".repeat(64));
-        System.out.println("ISBN\t\tTITLE");
-        System.out.println("=".repeat(64));
-        for (String[] b : list) System.out.printf("%s\t%s\n", b[0], b[1]);
-        System.out.println("=".repeat(64));
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, book[0]);
+            pstmt.setString(2, book[1]);
+            pstmt.setString(3, book[2]);
+            pstmt.setString(4, book[3]);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
-    public static void reserve_example(String isbn) {
-        Object status[] = { 1, auth.uid(), "" };
-        int i = database.write_status(isbn, status);
-        if (i > 0) {
-            System.out.printf("[+] Success\n");
-        } else {
-            System.out.printf("[-] Failed\n");
+    public static int add_user(String[] user) {
+
+        /** 
+         * Take string array as argument. 
+         * 
+         * user[]─┬─user[0] (int) => uid / user id
+         *        ├─user[1] (String) => user
+         *        └─user[2] (String) => name
+         * 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "INSERT INTO users (uid, user, name) VALUES (?, ?, ?)";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, user[0]);
+            pstmt.setString(2, user[1]);
+            pstmt.setString(3, user[2]);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int del_book(String isbn) {
+
+        /** 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "DELETE FROM books WHERE isbn = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, isbn);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int del_user(String uid) {
+
+        /** 
+         * Return an integer as write status. 
+         * 
+         * 0 => nothing is updated, failed
+         * 1 => one entry updated, success
+         */
+
+        // sql query prepare statement
+        String cmd = "DELETE FROM users WHERE uid = ?";
+
+        // update database
+        try (PreparedStatement pstmt = sqlite.conn.prepareStatement(cmd)) {
+            pstmt.setString(1, uid);
+            int i = pstmt.executeUpdate();
+            return i;
+        }
+        catch (SQLException e) {
+            // unable to update, print error message and return 0
+            System.out.println(e.getMessage());
+            return 0;
         }
     }
 }

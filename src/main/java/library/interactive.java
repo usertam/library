@@ -39,9 +39,36 @@ public class interactive {
         // call requested methods here
         switch (cmd[0].toLowerCase()) {
             // test methods may be changed later
+            case "delbook":
+                book.delete();
+                break;
+            case "deluser":
+                auth.del_user();
+                break;
+            case "addbook":
+                book.insert();
+                break;
+            case "adduser":
+                auth.new_user();
+                break;
+            case "records":
+                if (cmd.length > 1) book.records(cmd[1]);
+                else book.records(auth.uid());
+                break;
+            case "search":
+                if (cmd.length > 1) book.search(cmd[1]);
+                else System.out.printf("[-] No keyword supplied.\n");
+                break;
+            case "borrow":
+                if (cmd.length > 1) book.borrow(cmd[1]);
+                else System.out.printf("[-] No ISBN supplied.\n");
+                break;
             case "reserve":
-                if (cmd.length > 1) database.reserve_example(cmd[1]);
-                else System.out.println("[-] No ISBN supplied.");
+                if (cmd.length > 1) book.reserve(cmd[1]);
+                else System.out.printf("[-] No ISBN supplied.\n");
+                break;
+            case "ls":
+                book.index();
                 break;
             case "whoami":
                 auth.whoami();
@@ -60,9 +87,6 @@ public class interactive {
             case "passwd":
                 if (cmd.length > 1) auth.passwd(cmd[1]);
                 else auth.passwd(auth.uid());
-                break;
-            case "ls":
-                database.query_books_example();
                 break;
             case "exit":
                 System.out.println("[*] Time of exit: " + interactive.time());
