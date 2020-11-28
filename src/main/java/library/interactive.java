@@ -45,6 +45,9 @@ public class interactive {
             case "help":
                 interactive.help();
                 break;       
+            case "userlist":
+                interactive.userlist();
+                break;    
             case "ls":
                 book.query();
                 break;
@@ -135,6 +138,21 @@ public class interactive {
         }
     }
     
+    public static void userlist() {
+        
+        System.out.println("[*] Listing all users.");
+   
+        if (auth.check_user(auth.uid(),0)) {
+        List<String[]> list = database.query_users();
+    
+        for (String[] user : list)
+        System.out.println(user[1]); 
+   
+        } else {
+        System.out.println("[-] You don't have permission to perform this action.\n"); 
+     } 
+  }
+    
     public static void help() {
         
         System.out.println("[*] Listing available commands.");
@@ -165,6 +183,7 @@ public class interactive {
         if (auth.check_user(auth.uid(), 0)) {
             System.out.println("su\t<user>\t\t Impersonate a specific user, without password.");
             System.out.println("\t\t\t   To return to the original user, use \"logout\". ");
+            System.out.println("userlist\t\t\t\t\t Show list of users.");
             System.out.println("records\t<user>\t\t Show records of a specific user.");
             System.out.println("passwd\t<user>\t\t Change password of a specific user.");
             System.out.println("=".repeat(80));
