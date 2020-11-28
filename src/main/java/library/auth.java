@@ -137,7 +137,13 @@ public class auth {
     }
 
     public static void insert() {
-
+        
+        // access control: allow admin only
+        if (!auth.check(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return; 
+        }
+            
         // get new user info
         String user[] = {
             sc.prompt("Enter the user id: "),
@@ -155,6 +161,12 @@ public class auth {
     }
 
     public static void delete() {
+        
+        // access control: allow admin only
+        if (!auth.check(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return; 
+        }
 
         // get user id
         String uid = sc.prompt("Enter the user id: ");

@@ -122,6 +122,12 @@ public class book {
 
     public static void insert() {
 
+        // access control: allow admin only
+        if (!auth.check(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return;
+        }
+        
         // get new book info
         String book[] = {
             sc.prompt("Enter the ISBN: "),
@@ -140,6 +146,12 @@ public class book {
 
     public static void delete() {
 
+        // access control: allow admin only
+        if (!auth.check(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return;
+        }
+        
         // get book isbn
         String isbn = sc.prompt("Enter the ISBN: ");
 
