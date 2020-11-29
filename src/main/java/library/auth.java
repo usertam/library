@@ -2,6 +2,7 @@ package library;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 import java.util.Base64.Encoder;
 
 import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
@@ -178,6 +179,30 @@ public class auth {
         } else {
             System.out.println("[-] Failed to remove the user entry.");
         }
+    }
+
+    public static void list(){
+
+        // access control: allow admin only
+        if (!auth.check(auth.uid(), 0)) {
+            System.out.printf("[-] You don't have permission to perform this action.\n");
+            return; 
+        }
+
+        // get users from database
+        List<String[]> users = database.query_users();
+
+        // print divider
+        System.out.println("=".repeat(40));
+
+        // print user details
+        System.out.printf("%s\t%s\t%s\n", "UID", "USER", "NAME");
+        for (String u[] : users) {
+            System.out.printf("%s\t%s\t%s\n", u[0], u[1], u[2]);
+        }
+
+        // print divider
+        System.out.println("=".repeat(40));
     }
 
     public static int uid() {

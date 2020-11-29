@@ -39,6 +39,9 @@ public class interactive {
         // call requested methods here
         switch (cmd[0].toLowerCase()) {
             // test methods may be changed later
+            case "listusers":
+                auth.list();
+                break;
             case "delbook":
                 book.delete();
                 break;
@@ -70,7 +73,7 @@ public class interactive {
             case "help":
                 interactive.help();
                 break;       
-            case "ls":
+            case "listbooks":
                 book.index();
                 break;
             case "whoami":
@@ -125,7 +128,7 @@ public class interactive {
         System.out.println("search\t<keywords>\t Search for a book using keywords.");
         System.out.println("\t\t\t   Keywords with spaces can be placed in a quote.");
         System.out.println("\t\t\t   e.g. search \"key words\" ");
-        System.out.println("ls\t\t\t Display all library collections.");
+        System.out.println("listbooks\t\t Display all library collections.");
         System.out.println("=".repeat(80));
         System.out.println("whoami\t\t\t Display the current user.");
         System.out.println("login\t<user>\t\t Login as an user, providing password.");
@@ -147,6 +150,7 @@ public class interactive {
             System.out.println("su\t<user>\t\t Impersonate a specific user, without password.");
             System.out.println("\t\t\t   To return to the original user, use \"logout\". ");
             System.out.println("records\t<user>\t\t Show records of a specific user.");
+            System.out.println("listusers\t\t Display all user entires.");
             System.out.println("passwd\t<user>\t\t Change password of a specific user.");
             System.out.println("=".repeat(80));
             System.out.println("adduser\t<user>\t\t Add an user entry.");
